@@ -1,0 +1,27 @@
+id - name - contact.value
+1 - Christian - 622359635
+2 - Manuel - 618963523
+
+id - contact_id
+1 - 2
+
+TABLAS
+
+users
+id - name - email - password
+
+
+contacts
+id - contactable_id - contactable_type - type - label - value
+
+user_has_contacts
+id - user_id - contact_id
+
+
+Route::resource('contact_data');
+get /contacts route('contacts.index');
+post /contacts route('contacts.store');
+
+get /contacts/{id} route('contacts.show',id)
+put /contacts/{id} route('contact.update, id);
+delete /contacts/{id} route('contacts.delete', id);

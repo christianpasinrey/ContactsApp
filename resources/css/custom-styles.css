@@ -1,0 +1,12 @@
+
+ .contact-card {
+    @apply flex flex-col sm:w-full md:w-4/12 lg:w-3/12 rounded-md shadow-md border border-gray-200 p-4;
+ }
+
+ .cancel-btn {
+    @apply bg-red-500 hover:bg-red-700 text-white font-bold py-1.5 px-4 rounded-md hover:scale-105;
+ }
+
+ .submit-btn {
+    @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded-md hover:scale-105;
+ }
