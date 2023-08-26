@@ -1,10 +1,15 @@
 <script setup>
-    import { ref, onBeforeMount } from 'vue';
+    import { ref, onBeforeMount, onMounted } from 'vue';
     import axios from 'axios';
     import { useToast } from 'vue-toast-notification';
 
     const toast = useToast();
-
+    const props = defineProps({
+        contactName:{
+            type: String,
+            required: false,
+        }
+    })
     const emits = defineEmits(['close', 'contactCreated']);
 
     const contactDataTypes = ref([
@@ -65,7 +70,7 @@
     });
 
     const addContactDataToNewContact = () => {
-        let input = document.getElementById('contact-type');
+        let input = document.getElementById('contact_type');
         if (!newContactDataIsInvalid()) {
             newContact.value.contacts.push({
                 type: newContactData.value.type,
@@ -147,6 +152,13 @@
 
         return toast.info('Revisa los campos marcados en rojo');
     }
+    onBeforeMount(() => {
+        props.contactName ? newContact.value.name = props.contactName : '';
+    });
+    onMounted(() => {
+        let input = document.getElementById('contact-type');
+        newContact.value.name.length > 0 ? input.focus() : null;
+    });
 </script>
 <template>
     <div class="flex flex-row w-full px-4 py-2">

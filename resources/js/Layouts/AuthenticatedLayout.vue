@@ -149,7 +149,7 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="bg-gray-200">
                 <RouterView />
             </main>
         </div>

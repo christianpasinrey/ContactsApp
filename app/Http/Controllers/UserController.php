@@ -97,6 +97,6 @@ class UserController extends Controller
         }
 
         return response()
-            ->json($contacts->paginate(10));
+            ->json($contacts->paginate(20));
     }
 }

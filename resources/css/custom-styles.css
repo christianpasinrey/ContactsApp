@@ -1,6 +1,6 @@
 
  .contact-card {
-    @apply flex flex-col sm:w-full md:w-4/12 lg:w-3/12 rounded-md shadow-md border border-gray-200 p-4;
+    @apply flex flex-col flex-wrap w-full md:w-fit bg-slate-200 m-3 rounded-md shadow-sm border border-gray-300 p-4 hover:ring-1 hover:ring-slate-300 transition-all duration-500 cursor-default hover:shadow-lg hover:scale-110;
  }
 
  .cancel-btn {
@@ -9,4 +9,8 @@
 
  .submit-btn {
     @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded-md hover:scale-105;
+ }
+
+ .contact-card:hover > div > span#contact-name {
+    @apply scale-110;
  }
