@@ -6,15 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class File extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table ='posts';
+    CONST TYPE_IMAGE = 'image';
+    CONST TYPE_VIDEO = 'video';
+    CONST TYPE_AUDIO = 'audio';
+    CONST TYPE_DOCUMENT = 'document';
+
+    protected $table = 'files';
 
     protected $fillable = [
-        'title',
-        'body',
+        'name',
+        'path',
+        'type',
         'user_id'
     ];
 
@@ -22,11 +28,7 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function comments(){
-        return $this->hasMany(Comment::class, 'post_id');
-    }
-
-    public function files(){
-        return $this->morphMany(File::class, 'fileable');
+    public function fileable(){
+        return $this->morphTo();
     }
 }

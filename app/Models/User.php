@@ -106,4 +106,9 @@ class User extends Authenticatable
         $authUser = self::find(auth()->user()->id);
         return $authUser->contacts()->where('contact_id', $this->id)->exists();
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id');
+    }
 }

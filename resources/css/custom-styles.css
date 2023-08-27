@@ -27,10 +27,21 @@
  }
  /* section with name user-profile-right-bar */
  section[user-profile-right-bar]{
-    @apply flex flex-col flex-wrap overflow-x-hidden justify-evenly md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-2/12 py-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
+    @apply flex flex-col flex-wrap text-center overflow-x-hidden justify-evenly md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-2/12 py-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
  }
 
  section[user-timeline]{
     @apply flex flex-col md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-7/12 p-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
  }
 
+ .new-post-card{
+    @apply flex flex-col w-10/12 flex-wrap bg-slate-200 m-3 rounded-md shadow-sm border border-gray-300 p-4 hover:ring-1 hover:ring-slate-300 transition-all duration-500 cursor-default hover:shadow-lg;
+ }
+
+ .new-post-card:focus-within {
+    @apply transform scale-105;
+}
+
+.timeline-post-body-wrapper{
+    @apply bg-slate-100 w-full px-3 py-6 rounded-md shadow-md
+}

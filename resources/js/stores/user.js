@@ -51,6 +51,18 @@ export const useUsersStore = defineStore('users', () => {
             console.log(error);
         });
     }
+
+    const createPost = (post) => {
+        axios.post(route('posts.store'),{
+            user_id:authUser.value.id,
+            body:post
+        }).then(response => {
+            authUser.value?.posts.push(response.data);
+            console.log(authUser.value?.posts);
+        }).catch(error => {
+            console.log(error);
+        });
+    }
     // getters
     function getAuthUser() {
         return authUser.value;
@@ -81,6 +93,7 @@ export const useUsersStore = defineStore('users', () => {
         setSelectedUser,
         addSelectedUserAsContact,
         toggleUserInSelectedUsers,
+        createPost,
         setUsers,
         getAuthUser,
         getUserById,

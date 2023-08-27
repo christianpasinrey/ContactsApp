@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactDataController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
+
+use App\Models\User;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +32,11 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/home', function () {
-    return Inertia::render('Home');
+    $user = User::find(auth()->user()->id);
+    $user->load('contacts','posts');
+    return Inertia::render('Home', [
+        'user' => $user
+    ]);
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
@@ -41,6 +48,7 @@ Route::middleware('auth')->group(function () {
     //Resources group
     Route::resource('contact-data', ContactDataController::class);
     Route::resource('users', UserController::class);
+    Route::resource('posts', PostController::class);
 
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/contacts', [UserController::class, 'getContacts'])->name('contacts.index');

@@ -61,7 +61,6 @@ onMounted(() => {
             usersStore.setUsers([]);
         }
     });
-    usersStore.setAuthUser(page.props.auth.user);
 });
 </script>
 
