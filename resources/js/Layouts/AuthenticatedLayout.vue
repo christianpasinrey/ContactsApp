@@ -1,25 +1,74 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { onMounted, ref } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
-import {useDark,useToggle} from '@vueuse/core';
+import { useDark } from '@vueuse/core';
+import { useRouter } from 'vue-router';
+import { usePage } from '@inertiajs/vue3';
+import  { useUsersStore } from '@/Stores/user';
 
+const usersStore = useUsersStore();
+const page = usePage();
+const vueRouter = useRouter();
 const isDark = useDark();
 
 function toggleDark() {
     isDark.value = !isDark.value;
 }
 const showingNavigationDropdown = ref(false);
+
+const searchUsersString = ref('');
+const searchTimeout = ref(null);
+
+const searchUsers = () => {
+    axios.get(route('users.search', searchUsersString.value))
+    .then((response)=>{
+        usersStore.users = response.data;
+    }).catch((error)=>{
+        console.log(error);
+    });
+}
+
+const handleSearchUsers = (event) => {
+    clearTimeout(searchTimeout.value);
+    if(event.key == 'Enter'){
+        let element = document.getElementById('advanced-search-page-button');
+        element.click();
+        return;
+    }
+    searchTimeout.value = setTimeout(()=>{
+        if(searchUsersString.value.length < 3 && searchUsersString.value.length > 0) {
+            return;
+        }
+        return searchUsers();
+    }, 700);
+}
+
+const goToUserProfile = (user) => {
+    usersStore.setUsers([]);
+    usersStore.setSelectedUser(user);
+    vueRouter.push({
+        name: 'users.profile',
+        params: { id: user.id },
+    });
+}
+onMounted(() => {
+    let element = document.getElementById('users-list');
+    document.addEventListener('click', (event) => {
+        if(element.classList.contains('block') && !element.contains(event.target)){
+            usersStore.setUsers([]);
+        }
+    });
+    usersStore.setAuthUser(page.props.auth.user);
+});
 </script>
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div class="min-h-screen dark:bg-gray-900 relative">
+            <nav class="absolute top-0 left-0 z-[999] w-screen h-[7vh] bg-gradient-to-r from-slate-200 via-gray-300 to-sky-500 dark:from-slate-500 dark:via-gray-600 dark:to-sky-950 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -34,15 +83,52 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <RouterLink to="/dashboard">
-                                    <span class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out mt-5">
-                                        Dashboard
+                                    <span class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out mt-5">
+                                        Inicio
                                     </span>
                                 </RouterLink>
                                 <RouterLink to="/contacts">
-                                    <span class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out mt-5">
+                                    <span class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out mt-5">
                                         Contactos
                                     </span>
                                 </RouterLink>
+                                <RouterLink to="/advanced-search" id="advanced-search-page-button" class="hidden">
+                                </RouterLink>
+                            </div>
+                            <div class="shrink-0 flex items-center px-0 dark:text-gray-50 font-bold w-full">
+                                <div class="relative flex w-10/12">
+                                    <input type="search"
+                                    class="w-full mx-6 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                                    placeholder="Buscar..."
+                                    v-model="searchUsersString"
+                                    @keyup.prevent="handleSearchUsers($event)"
+                                    >
+                                    <output
+                                        :class="{
+                                            'hidden': usersStore.users?.length == 0,
+                                            'block': usersStore.users?.length > 0
+                                        }"
+                                        id="users-list"
+                                        class="absolute top-8 ml-6 z-[1000] shadow-md rounded-b-md h-fit w-11/12 max-h-64 overflow-y-auto transition-all duration-700 ease-in-out bg-slate-100 dark:bg-slate-400 ">
+                                        <ol>
+                                            <li
+                                                v-for="user in usersStore.users"
+                                                :key="`user-${user.id}`"
+                                                id="user-item-list"
+                                                style="list-style-type: none;"
+                                                class="text-black px-2 dark:text-gray-50 dark:font-medium cursor-pointer w-full hover:bg-slate-200 dark:hover:bg-slate-600"
+                                                :class="{
+                                                    'py-1.5' : usersStore.users.indexOf(user) == 0,
+                                                    'py-1' : usersStore.users.indexOf(user) != 0,
+                                                    'border-b border-gray-300 dark:border-gray-700': usersStore.users.indexOf(user) != usersStore.users.length - 1
+                                                }"
+                                                @click.prevent="goToUserProfile(user)"
+                                            >
+                                                {{ user.name }}
+                                            </li>
+                                        </ol>
+                                    </output>
+                                </div>
                             </div>
                         </div>
 
@@ -170,9 +256,17 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main class="bg-slate-100 dark:bg-slate-700">
-                <RouterView />
+            <main class="absolute top-[7vh] left-0 bg-slate-100 dark:bg-slate-700 w-full z-10 min-h-[93vh]">
+                <RouterView :key="$route.fullPath" />
+                <img src="storage/app-bg.png" object-fit="cover" class="absolute inset-0 w-full h-full object-cover z-[-2] dark:opacity-60" alt="fondo-contactsApp">
+                <div class="absolute inset-0 w-full h-full bg-slate-100 dark:bg-slate-600 opacity-50 z-[-1]"></div>
             </main>
         </div>
     </div>
 </template>
+<style scoped>
+.router-link-active.router-link-exact-active {
+    color: #e53e3e !important;
+    border-color: #e53e3e !important;
+}
+</style>

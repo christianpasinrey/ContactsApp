@@ -1,4 +1,7 @@
 
+ .user-profile-contact-card{
+    @apply flex flex-col flex-wrap w-full mx-1 bg-slate-200 m-3 rounded-md shadow-sm border border-gray-300 p-4 hover:ring-1 hover:ring-slate-300 transition-all duration-500 cursor-default hover:shadow-lg hover:scale-110;
+ }
  .contact-card {
     @apply flex flex-col flex-wrap w-full md:w-fit bg-slate-200 m-3 rounded-md shadow-sm border border-gray-300 p-4 hover:ring-1 hover:ring-slate-300 transition-all duration-500 cursor-default hover:shadow-lg hover:scale-110;
  }
@@ -14,3 +17,20 @@
  .contact-card:hover > div > span#contact-name {
     @apply scale-110;
  }
+
+ .user-profile-layout{
+    @apply flex flex-row relative;
+ }
+
+ section[user-profile-basic-info-left-bar]{
+    @apply flex flex-col justify-evenly md:absolute shadow-md md:top-0 md:left-0 border-r sm:w-full md:w-3/12 lg:w-2/12 p-8 bg-gradient-to-tr from-cyan-950 via-sky-800 to-gray-300 opacity-80 h-[93vh]
+ }
+ /* section with name user-profile-right-bar */
+ section[user-profile-right-bar]{
+    @apply flex flex-col flex-wrap overflow-x-hidden justify-evenly md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-2/12 py-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
+ }
+
+ section[user-timeline]{
+    @apply flex flex-col md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-7/12 p-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
+ }
+

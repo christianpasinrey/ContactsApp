@@ -97,6 +97,40 @@ class UserController extends Controller
         }
 
         return response()
-            ->json($contacts->paginate(20));
+            ->json($contacts->orderBy('name', 'asc')->paginate(20));
+    }
+
+    public function searchUsers($search_string = null)
+    {
+        if(empty($search_string)){
+            $users = User::all();
+        }
+        else{
+            $users = User::orderBy('name', 'asc')
+                ->where('name', 'like', '%'.$search_string.'%')
+                ->orWhere(function($query) use ($search_string){
+                    $query->whereHas('contactData', function($query) use ($search_string){
+                        $query->where('label', 'like', '%'.$search_string.'%')
+                            ->orWhere('value', 'like', '%'.$search_string.'%');
+                    });
+                })->get();
+        }
+
+        return response()
+            ->json($users);
+    }
+
+    public function addContact(Request $request)
+    {
+        $user = User::find(auth()->user()->id);
+
+        $contact = User::find($request->id);
+
+        $user->contacts()->attach($contact->id);
+
+        return response()
+            ->json([
+                'message' => 'Contact added successfully'
+            ]);
     }
 }

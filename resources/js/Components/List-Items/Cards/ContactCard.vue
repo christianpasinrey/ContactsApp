@@ -1,11 +1,18 @@
 <script setup>
+    import { ref } from 'vue';
     import SocialMediaIcons from '../../SocialIcons.vue';
 
     const emits = defineEmits(['edit','delete']);
-    const props = defineProps(['contact'])
+    const props = defineProps(['contact']);
+
+    const isHovered = ref(false);
+
 </script>
 <template>
-    <div class="contact-card">
+    <div class="contact-card"
+        @mouseover="isHovered = true"
+        @mouseleave="isHovered = false"
+        >
         <div class="flex flex-row justify-between">
             <span
                 id="contact-name"
@@ -13,6 +20,7 @@
                 >{{ contact.name }}
             </span>
             <SocialMediaIcons
+                v-if="isHovered"
                 :contact="contact"></SocialMediaIcons>
         </div>
         <div class="flex flex-row relative gap-3 pl-4 mt-2"

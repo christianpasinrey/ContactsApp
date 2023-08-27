@@ -4,6 +4,10 @@
             type: Object,
             required: true,
         },
+        size: {
+            type: Number,
+            default: 1,
+        },
     });
 </script>
 <template>
@@ -14,10 +18,13 @@
             v-if="contact.linkedin != null"
             :href="`https://linkedin.com/in/${contact.linkedin}`"
             target="_blank"
-            class="hover:scale-110 cursor-pointer"
+            class="hover:scale-110 h-fit cursor-pointer rounded-md hover:ring-1 hover:ring-slate-400 transition-all duration-500 ease-in-out"
             >
             <svg
-                class="w-5 h-5"
+                :style="{
+                    width: `${size}rem`,
+                    height: `${size}rem`,
+                }"
                 viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
                 <g fill="none">
                     <rect width="256" height="256" fill="#fff" rx="60"/>
@@ -30,10 +37,13 @@
             v-if="contact.instagram != null"
             :href="`https://instagram.com/${contact.instagram}`"
             target="_blank"
-            class="hover:scale-110 cursor-pointer"
+            class="hover:scale-110 h-fit cursor-pointer rounded-md hover:ring-1 hover:ring-slate-400 transition-all duration-500 ease-in-out"
             >
             <svg
-                class="w-5 h-5"
+                :style="{
+                    width: `${size}rem`,
+                    height: `${size}rem`,
+                }"
                 viewBox="0 0 256 256"
                 xmlns="http://www.w3.org/2000/svg">
                 <g fill="none">
@@ -60,10 +70,13 @@
             v-if="contact.facebook != null"
             :href="`https://facebook.com/${contact.facebook}`"
             target="_blank"
-            class="hover:scale-110 cursor-pointer"
+            class="hover:scale-110 h-fit cursor-pointer rounded-md hover:ring-1 hover:ring-slate-400 transition-all duration-500 ease-in-out"
             >
             <svg
-                class="w-5 h-5"
+                :style="{
+                    width: `${size}rem`,
+                    height: `${size}rem`,
+                }"
                 viewBox="0 0 128 128"
                 xmlns="http://www.w3.org/2000/svg">
                 <rect width="118.35" height="118.35" x="4.83" y="4.83" fill="#3d5a98" rx="6.53" ry="6.53"/>

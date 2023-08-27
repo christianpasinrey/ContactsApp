@@ -44,7 +44,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected $appends = ['linkedin','instagram','facebook','phones','emails'];
+    protected $appends = ['linkedin','instagram','facebook','phones','emails','is_contact_of_auth_user'];
 
     protected $with = ['contacts'];
 
@@ -99,5 +99,11 @@ class User extends Authenticatable
     public function getEmailsAttribute()
     {
         return $this->contactData->where('type', ContactData::TYPE_EMAIL);
+    }
+
+    public function getIsContactOfAuthUserAttribute()
+    {
+        $authUser = self::find(auth()->user()->id);
+        return $authUser->contacts()->where('contact_id', $this->id)->exists();
     }
 }

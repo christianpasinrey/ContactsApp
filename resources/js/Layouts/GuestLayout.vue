@@ -4,10 +4,10 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen relative z-10 flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
         <div>
-            <Link :href="route('welcome')">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
+            <Link :href="route('welcome')" class="text-3xl font-medium">
+                ContactsApp
             </Link>
         </div>
 
@@ -16,5 +16,6 @@ import { Link } from '@inertiajs/vue3';
         >
             <slot />
         </div>
+        <img src="storage/main-welcome-bg.png" object-fit="cover" class="absolute inset-0 w-full h-full object-cover z-[-1]" alt="fondo-contactsApp">
     </div>
 </template>

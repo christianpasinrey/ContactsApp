@@ -40,10 +40,13 @@ Route::middleware('auth')->group(function () {
 
     //Resources group
     Route::resource('contact-data', ContactDataController::class);
+    Route::resource('users', UserController::class);
 
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/contacts', [UserController::class, 'getContacts'])->name('contacts.index');
     Route::get('/contacts/search/{search_string?}', [UserController::class, 'searchContacts'])->name('contacts.search');
+    Route::get('/search/users/{search_string?}', [UserController::class, 'searchUsers'])->name('users.search');
+    Route::post('/users/contacts/add', [UserController::class, 'addContact'])->name('users.contacts.add');
 });
 
 require __DIR__.'/auth.php';
