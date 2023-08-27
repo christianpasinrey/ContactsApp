@@ -6,7 +6,13 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import {useDark,useToggle} from '@vueuse/core';
 
+const isDark = useDark();
+
+function toggleDark() {
+    isDark.value = !isDark.value;
+}
 const showingNavigationDropdown = ref(false);
 </script>
 
@@ -19,11 +25,9 @@ const showingNavigationDropdown = ref(false);
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div class="shrink-0 flex items-center">
+                            <div class="shrink-0 flex items-center dark:text-gray-50 font-bold ">
                                 <Link :href="route('home')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200"
-                                    />
+                                    ContactsApp
                                 </Link>
                             </div>
 
@@ -71,9 +75,26 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('logout')" method="post" as="button">
+                                        <DropdownLink
+                                            :href="route('logout')"
+                                            method="post"
+                                            as="button">
                                             Log Out
                                         </DropdownLink>
+                                        <button
+                                            class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out"
+                                            @click.prevent="toggleDark">
+                <!--                             <svg
+                                                class="w-5 h-5"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path v-if="isDark" fill="currentColor" d="M10.999-.004h2.004V2h-2.004V-.004ZM4.223 2.803L5.64 4.22L4.223 5.637L2.806 4.22l1.417-1.417Zm15.556 0l1.417 1.417l-1.417 1.417l-1.417-1.417l1.417-1.417ZM12 6a6 6 0 1 0 0 12a6 6 0 0 0 0-12Zm-8 6a8 8 0 1 1 16 0a8 8 0 0 1-16 0Zm-4.001-1.004h2.004V13H-.001v-2.004Zm22 0h2.004V13h-2.004v-2.004ZM4.223 18.36l1.417 1.417l-1.417 1.418l-1.417-1.418l1.417-1.417Zm15.556 0l1.417 1.417l-1.417 1.417l-1.417-1.417l1.417-1.416ZM11 21.997h2.004V24H11v-2.004Z"/>
+                                                <path v-else fill="currentColor" d="M10.999-.004h2.004V2h-2.004V-.004ZM4.223 2.803L5.64 4.22L4.223 5.637L2.806 4.22l1.417-1.417Zm15.556 0l1.417 1.417l-1.417 1.417l-1.417-1.417l1.417-1.417ZM12 6a6 6 0 1 0 0 12a6 6 0 0 0 0-12Zm-8 6a8 8 0 1 1 16 0a8 8 0 0 1-16 0Zm-4.001-1.004h2.004V13H-.001v-2.004Zm22 0h2.004V13h-2.004v-2.004ZM4.223 18.36l1.417 1.417l-1.417 1.418l-1.417-1.418l1.417-1.417Zm15.556 0l1.417 1.417l-1.417 1.417l-1.417-1.417l1.417-1.416ZM11 21.997h2.004V24H11v-2.004Z"/>
+
+                                            </svg> -->
+                                            <span v-if="isDark">Tema claro</span>
+                                            <span v-else>Tema oscuro</span>
+                                        </button>
                                     </template>
                                 </Dropdown>
                             </div>
@@ -149,7 +170,7 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main class="bg-gray-200">
+            <main class="bg-slate-100 dark:bg-slate-700">
                 <RouterView />
             </main>
         </div>
