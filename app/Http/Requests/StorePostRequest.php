@@ -23,7 +23,8 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'nullable|string',
             'body' => 'required|string',
-            'user_id' => 'required|integer'
+            'user_id' => 'required|integer',
+            'files' => 'nullable|array',
         ];
     }
 }

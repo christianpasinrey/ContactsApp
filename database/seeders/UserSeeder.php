@@ -15,6 +15,8 @@ class UserSeeder extends Seeder
         $christian = \App\Models\User::factory()->create([
             'name' => 'Christian',
             'email' => 'user@example.com',
+            'active' => true,
+            'public_profile' => true,
         ]);
         $christian->contactData()->create([
             'label' => 'Email',
@@ -47,8 +49,9 @@ class UserSeeder extends Seeder
             'is_main' => true,
         ]);
 
-        \App\Models\User::factory()->count(100)->create()->each(function ($user) {
+        \App\Models\User::factory()->count(100)->create()->each(function ($user) use ($christian) {
             $random_phone_number= '+34 '.rand(6000000, 6999999);
+
             $user->contactData()->create([
                 'label' => \Illuminate\Support\Arr::random(['Personal','Trabajo','Otros']),
                 'type' => \App\Models\ContactData::TYPE_EMAIL,
@@ -79,8 +82,8 @@ class UserSeeder extends Seeder
                 'value' => $user->name,
                 'is_main' => true,
             ]);
+            if($user->active && $user->public_profile)
+                $christian->contacts()->attach($user->id);
         });
-
-        $christian->contacts()->attach(\App\Models\User::all()->random(50));
     }
 }

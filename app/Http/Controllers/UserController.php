@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Validated;
 use App\Models\User;
 use App\Http\Controllers\ContactDataController;
 use App\Models\ContactData;
+use App\Models\Scopes\ActiveAndPublicProfileUserScope;
 
 class UserController extends Controller
 {
@@ -103,21 +104,19 @@ class UserController extends Controller
     public function searchUsers($search_string = null)
     {
         if(empty($search_string)){
-            $users = User::all();
+            $users = User::searchable();
         }
         else{
-            $users = User::orderBy('name', 'asc')
-                ->where('name', 'like', '%'.$search_string.'%')
-                ->orWhere(function($query) use ($search_string){
-                    $query->whereHas('contactData', function($query) use ($search_string){
-                        $query->where('label', 'like', '%'.$search_string.'%')
-                            ->orWhere('value', 'like', '%'.$search_string.'%');
-                    });
-                })->get();
+            $users = User::searchable()
+                ->name($search_string)
+                ->contactData($search_string);
         }
 
         return response()
-            ->json($users);
+            ->json(
+                $users->orderBy('name', 'asc')
+                    ->get()
+            );
     }
 
     public function addContact(Request $request)

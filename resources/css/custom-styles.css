@@ -35,7 +35,7 @@
  }
 
  .new-post-card{
-    @apply flex flex-col w-10/12 flex-wrap bg-slate-200 m-3 rounded-md shadow-sm border border-gray-300 p-4 hover:ring-1 hover:ring-slate-300 transition-all duration-500 cursor-default hover:shadow-lg;
+    @apply relative flex flex-col w-10/12 flex-wrap bg-slate-200 m-3 rounded-md shadow-sm border border-gray-300 hover:ring-1 hover:ring-slate-300 transition-all duration-500 cursor-default hover:shadow-lg;
  }
 
  .new-post-card:focus-within {

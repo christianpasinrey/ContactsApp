@@ -52,10 +52,11 @@ export const useUsersStore = defineStore('users', () => {
         });
     }
 
-    const createPost = (post) => {
+    const createPost = (post, files=null) => {
         axios.post(route('posts.store'),{
             user_id:authUser.value.id,
-            body:post
+            body:post,
+            files: files
         }).then(response => {
             authUser.value?.posts.push(response.data);
             console.log(authUser.value?.posts);
@@ -63,6 +64,7 @@ export const useUsersStore = defineStore('users', () => {
             console.log(error);
         });
     }
+
     // getters
     function getAuthUser() {
         return authUser.value;

@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactDataController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\FileController;
 
 use App\Models\User;
 
@@ -33,7 +34,7 @@ Route::get('/', function () {
 
 Route::get('/home', function () {
     $user = User::find(auth()->user()->id);
-    $user->load('contacts','posts');
+    $user->load('contacts','posts','files');
     return Inertia::render('Home', [
         'user' => $user
     ]);
@@ -49,12 +50,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('contact-data', ContactDataController::class);
     Route::resource('users', UserController::class);
     Route::resource('posts', PostController::class);
-
+    Route::resource('files', FileController::class);
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/contacts', [UserController::class, 'getContacts'])->name('contacts.index');
     Route::get('/contacts/search/{search_string?}', [UserController::class, 'searchContacts'])->name('contacts.search');
     Route::get('/search/users/{search_string?}', [UserController::class, 'searchUsers'])->name('users.search');
     Route::post('/users/contacts/add', [UserController::class, 'addContact'])->name('users.contacts.add');
+
+    //User files
+    Route::get('/files/user/{id}', [FileController::class, 'getUserFiles'])->name('files.user');
 });
 
 require __DIR__.'/auth.php';

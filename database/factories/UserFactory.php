@@ -16,12 +16,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $active = fake()->boolean();
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => bcrypt('Aa.123456789'), // Aa.123456789
             'remember_token' => Str::random(10),
+            'active' => $active,
+            'public_profile' => $active ? fake()->boolean() : false,
         ];
     }
 

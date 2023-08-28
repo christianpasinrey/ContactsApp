@@ -13,15 +13,15 @@ class FileController extends Controller
      */
     public function index()
     {
-        //
+        return response()
+            ->json(File::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getUserFiles($id)
     {
-        //
+        $files = File::where('user_id', $id)->get();
+        return response()
+            ->json($files);
     }
 
     /**
@@ -29,7 +29,34 @@ class FileController extends Controller
      */
     public function store(StoreFileRequest $request)
     {
-        //
+        if($request->hasFile('file')){
+            $file = $request->file('file');
+            $file_name = $file->getClientOriginalName();
+            $file->move(storage_path('users_files'), $file_name);
+            $file_path = storage_path('users_files') . '/' . $file_name;
+            $file_type = $file->getMimeType();
+
+            $validated = $request->validated();
+            $validated['name'] = $file_name;
+            $validated['path'] = $file_path;
+            $validated['type'] = $file_type;
+            $validated['user_id'] = auth()->user()->id;
+
+            unset($validated['file']);
+
+            $file = File::create($validated);
+
+            return response()
+                ->json([
+                    'message' => 'File created successfully',
+                    'data' => $file
+                ], 200);
+        }
+
+        return response()
+            ->json([
+                'message' => 'File not found in request',
+            ], 404);
     }
 
     /**
@@ -37,15 +64,8 @@ class FileController extends Controller
      */
     public function show(File $file)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(File $file)
-    {
-        //
+        return response()
+            ->json($file);
     }
 
     /**
@@ -53,7 +73,15 @@ class FileController extends Controller
      */
     public function update(UpdateFileRequest $request, File $file)
     {
-        //
+        $validated = $request->validated();
+
+        $file->update($validated);
+
+        return response()
+            ->json([
+                'message' => 'File updated successfully',
+                'data' => $file
+            ], 200);
     }
 
     /**
@@ -61,6 +89,28 @@ class FileController extends Controller
      */
     public function destroy(File $file)
     {
-        //
+        if($file->fileable_type == 'App\Models\User' && $file->fileable_id === auth()->user()->id){
+            $file->delete();
+            return response()
+                ->json([
+                    'message' => 'File deleted successfully'
+                ], 200);
+        }
+
+        return response()
+            ->json([
+                'message' => 'You are not authorized to delete this file'
+            ], 401);
+    }
+
+    public function attachFileToModel($file, $model_string, $model){
+        $file_controller = new FileController();
+        $file_controller->store($file);
+        $file = File::where('name', $file->getClientOriginalName())->first();
+        $file->fileable_type = $model_string;
+        $file->fileable_id = $model->id;
+        $file->save();
+
+        return $file;
     }
 }

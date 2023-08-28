@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -110,5 +111,31 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->hasMany(Post::class, 'user_id');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class, 'user_id');
+    }
+
+    public function scopeSearchable(Builder $query)
+    {
+        $query->where('active', 1)
+            ->where('public_profile', 1);
+    }
+
+    public function scopeName(Builder $query, $name)
+    {
+        $query->where('name', 'like', '%'.$name.'%');
+    }
+
+    public function scopeContactData(Builder $query, $search_string)
+    {
+        $query->where(function($query) use ($search_string){
+            $query->whereHas('contactData', function($query) use ($search_string){
+                $query->where('label', 'like', '%'.$search_string.'%')
+                    ->orWhere('value', 'like', '%'.$search_string.'%');
+            });
+        });
     }
 }

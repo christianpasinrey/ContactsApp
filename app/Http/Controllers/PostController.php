@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-
+use App\Http\Controllers\FileController;
 
 class PostController extends Controller
 {
@@ -27,6 +27,16 @@ class PostController extends Controller
 
         $post = Post::create($validated);
 
+        if(!empty($request->files)){
+            $files = [];
+            foreach($request->files as $file){
+                $file_controller = new FileController();
+                $newFile = $file_controller->attachFileToModel($file, 'App\Models\Post', $post);
+
+                $files[] = $newFile;
+            }
+
+        }
         return response()
             ->json([
                 'message' => 'Post created successfully',
