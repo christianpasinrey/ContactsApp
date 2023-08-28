@@ -1,17 +1,31 @@
 <script setup>
-    import { onMounted } from 'vue';
-    const props = defineProps(['body', 'files']);
+    import { onMounted, computed } from 'vue';
+    //import utilities from date-fns to calculate durations
+    import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+    import { es } from 'date-fns/locale'
+    import { useUsersStore } from '@/Stores/user';
 
+    const usersStore = useUsersStore();
+    const props = defineProps(['body', 'files','createdAt','mentions','user']);
     const handleFilePath = (file) => {
         return `storage/files/${file.path.replace('public/files/', '')}`
     };
-    onMounted(() => {
-        console.log(props.body);
+
+    const getDurationOfCreatedPost = computed(() => {
+        //return time passed from now to created_at using date-fns in spanish
+        return formatDistance(new Date(props.createdAt), new Date(), { locale: es });
     });
 </script>
 <template>
     <div class="flex flex-row py-1 justify-start px-1 rounded-lg shadow-md bg-slate-200 h-fit w-full hover:bg-slate-300 transition-all duration-500 ease-in-out">
         <div class="timeline-post-body-wrapper">
+            <div class="flex flex-row justify-end absolute top-2 left-0 w-full">
+                <h3 v-if="user?.id !== usersStore.authUser?.id"
+                    class="mx-2 font-medium text-sky-600 cursor-pointer"
+                    @click.prevent="goToUserProfile"
+                >{{ user.name }}
+            </h3>
+            </div>
             <p v-html="body"></p>
             <!-- preview of files -->
             <div class="flex flex-row flex-wrap justify-start gap-2 mt-6 relative">
@@ -33,6 +47,9 @@
                         :alt="file.name"
                     />
                 </div>
+            </div>
+            <div class="flex flex-row justify-end">
+                <p class="flex flex-end text-xs font-bold pt-5 pb-1 text-gray-500">Publicado hace {{ getDurationOfCreatedPost }}</p>
             </div>
         </div>
     </div>

@@ -1,9 +1,10 @@
 <script setup>
     import { ref, computed } from 'vue';
     import { useUsersStore } from '@/Stores/user';
-
+    import { useRouter } from 'vue-router';
     const URL = window.URL || window.webkitURL;
 
+    const vueRouter = useRouter();
     const usersStore = useUsersStore();
 
     const newPostTextarea = ref(null);
@@ -92,21 +93,26 @@
     }
 
     const handleMention = (id) => {
+        //delete the word and the @
+        newPostTextarea.value.innerHTML = newPostTextarea.value.innerHTML.slice(0, -mentionWord.value.length - 1);
         let user = usersStore.authUser?.contacts.find((user) => user.id === parseInt(id));
         if (user && !mentions.value.includes(user)) {
             mentions.value.push(user);
+            usersStore.selectedUser = user;
         }else{
             isMention.value = false;
             mentionWord.value = '';
             mentionOptions.value = [];
             return toast.error('No se pudo mencionar al usuario');
         }
-        newPostTextarea.value.innerHTML = newPostTextarea.value.innerHTML.replace(
-            `@${mentionWord.value}`,
-            `<a class="font-medium text-blue-600">
-                ${user.name}
-            </a>`
-        );
+
+        let newElement = document.createElement('span');
+        newElement.textContent = `${user.name}`;
+        newElement.onclick = () => goToUserProfile(user.id);
+        newElement.id = user.id;
+        newElement.classList.add('text-sky-600', 'font-bold', 'cursor-pointer','user-mentioned');
+        newPostTextarea.value.appendChild(newElement);
+
         newPost.value = newPostTextarea.value.innerHTML;
         isMention.value = false;
         mentionWord.value = '';
@@ -119,11 +125,15 @@
     const placeCaretAtEnd = () => {
       const range = document.createRange();
       const sel = window.getSelection();
-      range.setStart(newPostTextarea.value, newPostTextarea.value.childNodes.length);
+      range.setStart(newPostTextarea.value.childNodes[0], newPostTextarea.value.childNodes.length);
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
       newPostTextarea.value.focus();
+    }
+
+    const goToUserProfile = (id) => {
+        vueRouter.push({ name: 'users.profile', params: { id } });
     }
 </script>
 <template>
@@ -162,7 +172,9 @@
             </select>
         </div>
 
-        <div class="h-fit w-full bg-sky-300 flex flex-row justify-start align-bottom items-end content-end">
+        <div
+            class="h-fit w-full flex flex-row justify-start align-bottom items-end content-end"
+        >
             <input
                 type="file"
                 class="hidden"

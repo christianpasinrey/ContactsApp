@@ -4,10 +4,11 @@
     import TimeLinePostCard from '@/Components/List-Items/Cards/TimeLinePostCard.vue';
     import NewPostCard from '@/Components/List-Items/Cards/NewPostCard.vue';
     import { useUsersStore } from '@/Stores/user';
+import { onBeforeMount } from 'vue';
 
     const usersStore = useUsersStore();
 
-    const posts = usersStore.authUser?.posts;
+    const posts = usersStore.authUser?.timeline;
 
 </script>
 
@@ -32,6 +33,9 @@
                             <TimeLinePostCard
                                 :body="item.body"
                                 :files="item.files"
+                                :createdAt="item.created_at"
+                                :mentions="item.mentions"
+                                :user="item.user"
                             />
                         </template>
                     </VerticalTimelineItem>

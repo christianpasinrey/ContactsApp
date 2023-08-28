@@ -33,8 +33,10 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/home', function () {
+    $controller = new UserController();
     $user = User::find(auth()->user()->id);
-    $user->load('contacts','posts','files');
+    $user->load('contacts','files');
+    $user->timeline = $controller->getUserTimeLinePosts($user);
     return Inertia::render('Home', [
         'user' => $user
     ]);

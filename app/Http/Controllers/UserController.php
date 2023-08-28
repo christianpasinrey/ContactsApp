@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Validated;
 use App\Models\User;
+use App\Models\Post;
 use App\Http\Controllers\ContactDataController;
 use App\Models\ContactData;
 use App\Models\Scopes\ActiveAndPublicProfileUserScope;
@@ -128,5 +129,25 @@ class UserController extends Controller
             ->json([
                 'message' => 'Contact added successfully'
             ]);
+    }
+
+    public function getUserTimeLinePosts(User $user)
+    {
+        $user_posts = $user->posts()->get();
+        foreach($user_posts as $post){
+            $post->user = auth()->user();
+        }
+
+        $posts_of_contacts = collect();
+        foreach($user->contacts as $contact){
+            $contact_posts = $contact->posts()->get();
+            $posts_of_contacts = $posts_of_contacts->merge($contact_posts);
+        }
+        foreach($posts_of_contacts as $post){
+            $post->user = $post->user()->first();
+        }
+
+        $posts = $user_posts->merge($posts_of_contacts)->sortByDesc('created_at');
+        return $posts;
     }
 }

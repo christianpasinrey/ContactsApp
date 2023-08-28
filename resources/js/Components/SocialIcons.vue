@@ -15,7 +15,7 @@
         name="social-networks"
         class="flex gap-2">
         <a
-            v-if="contact.linkedin != null"
+            v-if="contact?.linkedin != null"
             :href="`https://linkedin.com/in/${contact.linkedin}`"
             target="_blank"
             class="hover:scale-110 h-fit cursor-pointer rounded-md hover:ring-1 hover:ring-slate-400 transition-all duration-500 ease-in-out"
@@ -34,7 +34,7 @@
             </svg>
         </a>
         <a
-            v-if="contact.instagram != null"
+            v-if="contact?.instagram != null"
             :href="`https://instagram.com/${contact.instagram}`"
             target="_blank"
             class="hover:scale-110 h-fit cursor-pointer rounded-md hover:ring-1 hover:ring-slate-400 transition-all duration-500 ease-in-out"
@@ -67,7 +67,7 @@
             </svg>
         </a>
         <a
-            v-if="contact.facebook != null"
+            v-if="contact?.facebook != null"
             :href="`https://facebook.com/${contact.facebook}`"
             target="_blank"
             class="hover:scale-110 h-fit cursor-pointer rounded-md hover:ring-1 hover:ring-slate-400 transition-all duration-500 ease-in-out"

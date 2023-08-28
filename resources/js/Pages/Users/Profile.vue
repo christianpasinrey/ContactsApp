@@ -1,6 +1,6 @@
 <script setup>
     import { useUsersStore } from '@/Stores/User';
-    import { useRoute, useRouter } from 'vue-router';
+    import { useRoute } from 'vue-router';
     import { watch,ref } from 'vue';
     import SocialIcons from '@/Components/SocialIcons.vue';
     import SidebarContactCard from '@/Components/List-items/Cards/SidebarContactCard.vue';
@@ -10,7 +10,6 @@
 
     const usersStore = useUsersStore();
     const vueRoute = useRoute();
-    const vueRouter = useRouter();
 
     const user = usersStore.selectedUser;
     const selectedModal = ref(null);
@@ -51,7 +50,7 @@
                 </div>
             </div>
             <button
-                v-if="!user.is_contact_of_auth_user"
+                v-if="!user?.is_contact_of_auth_user"
                 @click.prevent="toggleModal('add-contact')"
                 class="py-0.5 px-1 hover:scale-110 hover:shadow-lg hover:ring-1 hover:ring-blue-700 rounded-md w-full text-gray-100 font-medium bg-sky-700 hover:bg-blue-500 transition-all duration-500 ease-in-out">
                 AÑADIR CONTACTO
