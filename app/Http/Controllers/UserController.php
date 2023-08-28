@@ -103,14 +103,11 @@ class UserController extends Controller
 
     public function searchUsers($search_string = null)
     {
-        if(empty($search_string)){
-            $users = User::searchable();
-        }
-        else{
-            $users = User::searchable()
-                ->name($search_string)
-                ->contactData($search_string);
-        }
+        empty($search_string) ?
+        $users = User::searchable() :
+        $users = User::searchable()
+            ->name($search_string)
+            ->contactData($search_string);
 
         return response()
             ->json(

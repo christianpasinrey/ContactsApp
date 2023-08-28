@@ -1,12 +1,16 @@
 <script setup>
     import { ref } from 'vue';
     import { useUsersStore } from '@/Stores/user';
+    import FormData from 'form-data';
+
     const URL = window.URL || window.webkitURL;
-    import CloseIcon from '@/Icons/CloseIcon.vue';
+
     const usersStore = useUsersStore();
 
     const newPost = ref('');
     const files = ref([]);
+    const fileInput = ref(null);
+
     const maxFileNumber = 4;
     const maxFileSize = 1024 * 1024 * 5;
     const fileError = ref(false);
@@ -32,22 +36,17 @@
             return;
         }
         files.value = [...fileList];
-        console.log(files.value);
     };
 
-    const createPost = () => {
+    const preparePost = () => {
         if(files.value.length > 0)
         {
-            const formData = new FormData();
-            formData.append('body', newPost.value);
-            files.value.forEach((file) => {
-                formData.append('files[]', file);
-            });
-            let newPostWithFiles = {
+            let formData = {
                 body: newPost.value,
                 files: files.value,
             };
-            usersStore.createPost(newPostWithFiles);
+            console.log(formData);
+            usersStore.createPost(formData);
             return;
         }
         usersStore.createPost(newPost.value);
@@ -61,7 +60,7 @@
             placeholder="¿Qué estás pensando?"
             v-model="newPost"
         ></textarea>
-        <div class="h-24 absolute -inset-0 flex flex-row justify-start align-bottom items-end content-end">
+        <div class="h-fit flex flex-row justify-start align-bottom items-end content-end">
             <input
                 type="file"
                 class="hidden"
@@ -72,7 +71,7 @@
             />
             <button
                 @click="$refs.fileInput.click()"
-                class="flex relative bg-sky-100 hover:scale-110 border-t border-r border-slate-400 hover:bg-slate-300 hover:shadow-lg text-gray-800 font-bold p-1 rounded-tr-md mr-2">
+                class="flex absolute bottom-11 left-1 z-10 bg-sky-100 hover:scale-110 border-t border-r border-slate-400 hover:bg-slate-300 hover:shadow-lg text-gray-800 font-bold p-1 rounded-tr-md mr-2">
                 <svg class="w-4 h-4"
                     viewBox="0 0 1536 1792"
                     xmlns="http://www.w3.org/2000/svg">
@@ -138,7 +137,7 @@
         </div>
         <button
             :disabled="newPost.length === 0"
-            @click.prevent="usersStore.createPost(newPost)"
+            @click.prevent="preparePost"
             class="bg-sky-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-b-md"
         >
             Publicar

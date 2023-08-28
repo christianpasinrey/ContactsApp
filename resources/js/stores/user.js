@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import axios from 'axios'
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
 // and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
@@ -52,11 +53,16 @@ export const useUsersStore = defineStore('users', () => {
         });
     }
 
-    const createPost = (post, files=null) => {
-        axios.post(route('posts.store'),{
-            user_id:authUser.value.id,
-            body:post,
-            files: files
+    const createPost = (data) => {
+        let formData = new FormData();
+        formData.append('body', data.body);
+        formData.append('user_id', authUser.value.id);
+        formData.append('files', data.files);
+        console.log(formData.getAll('files'));
+        axios.post(route('posts.store'),formData,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         }).then(response => {
             authUser.value?.posts.push(response.data);
             console.log(authUser.value?.posts);
