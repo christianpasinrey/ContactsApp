@@ -24,23 +24,21 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $validated = $request->validated();
-
         $post = Post::create($validated);
 
-        if(!empty($request->files)){
-            $files = [];
-            foreach($request->files as $file){
-                $file_controller = new FileController();
-                $newFile = $file_controller->attachFileToModel($file, 'App\Models\Post', $post);
-
-                $files[] = $newFile;
+        //check if there is any key in request with only number
+        if(preg_match('/[0-9]/', implode('', array_keys($request->all())))){
+            $file_controller = new FileController();
+            foreach($request->all() as $key => $value){
+                if(is_numeric($key)){
+                    $file_controller->attachFileToModel($value, 'App\Models\Post', $post);
+                }
             }
-
         }
         return response()
             ->json([
                 'message' => 'Post created successfully',
-                'data' => $post
+                'data' => $post->load('files')
             ], 200);
     }
 

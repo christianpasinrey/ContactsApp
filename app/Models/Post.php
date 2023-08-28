@@ -18,6 +18,8 @@ class Post extends Model
         'user_id'
     ];
 
+    protected $with = ['files','comments'];
+
     public function user(){
         return $this->belongsTo(User::class);
     }

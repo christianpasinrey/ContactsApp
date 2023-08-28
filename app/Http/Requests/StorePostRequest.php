@@ -24,7 +24,6 @@ class StorePostRequest extends FormRequest
             'title' => 'nullable|string',
             'body' => 'required|string',
             'user_id' => 'required|integer',
-            'files' => 'nullable|array',
         ];
     }
 }

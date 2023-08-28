@@ -7,10 +7,6 @@
             required: false,
             default: () => [],
         },
-        heigth: {
-            type: String,
-            default: '93vh',
-        },
     });
 
     onMounted(() => {
@@ -19,8 +15,7 @@
 </script>
 <template>
     <div
-        :style="`max-height: ${heigth}`"
-        class="w-full grid grid-cols-12 pt-4 justify-start overflow-auto px-5 py-4 relative">
+        class="w-full grid grid-cols-12 pt-4 justify-start px-5 py-4 relative">
         <div
             class="flex col-span-12 justify-center items-center"
             v-for="item in data"

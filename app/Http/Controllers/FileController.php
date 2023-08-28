@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\UpdateFileRequest;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -27,30 +28,17 @@ class FileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFileRequest $request)
+    public function store($file)
     {
-        if($request->hasFile('file')){
-            $file = $request->file('file');
-            $file_name = $file->getClientOriginalName();
-            $file->move(storage_path('users_files'), $file_name);
-            $file_path = storage_path('users_files') . '/' . $file_name;
-            $file_type = $file->getMimeType();
+        if($file){
+            $path = $file->store('public/files');
+            $file = new File ([
+                'name' => $file->getClientOriginalName(),
+                'path' => $path,
+                'user_id' => auth()->user()->id
+            ]);
 
-            $validated = $request->validated();
-            $validated['name'] = $file_name;
-            $validated['path'] = $file_path;
-            $validated['type'] = $file_type;
-            $validated['user_id'] = auth()->user()->id;
-
-            unset($validated['file']);
-
-            $file = File::create($validated);
-
-            return response()
-                ->json([
-                    'message' => 'File created successfully',
-                    'data' => $file
-                ], 200);
+            return $file;
         }
 
         return response()
@@ -105,12 +93,11 @@ class FileController extends Controller
 
     public function attachFileToModel($file, $model_string, $model){
         $file_controller = new FileController();
-        $file_controller->store($file);
-        $file = File::where('name', $file->getClientOriginalName())->first();
-        $file->fileable_type = $model_string;
-        $file->fileable_id = $model->id;
-        $file->save();
+        $uploaded_file = $file_controller->store($file);
 
-        return $file;
+        $uploaded_file->fileable_type = $model_string;
+        $uploaded_file->fileable_id = $model->id;
+        $uploaded_file->save();
+        return $uploaded_file;
     }
 }

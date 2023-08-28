@@ -1,7 +1,6 @@
 <script setup>
     import { ref } from 'vue';
     import { useUsersStore } from '@/Stores/user';
-    import FormData from 'form-data';
 
     const URL = window.URL || window.webkitURL;
 
@@ -10,6 +9,7 @@
     const newPost = ref('');
     const files = ref([]);
     const fileInput = ref(null);
+    const textAreaFocused = ref(false);
 
     const maxFileNumber = 4;
     const maxFileSize = 1024 * 1024 * 5;
@@ -39,24 +39,38 @@
     };
 
     const preparePost = () => {
+        let formData = {
+            body: newPost.value,
+        };
         if(files.value.length > 0)
         {
-            let formData = {
-                body: newPost.value,
-                files: files.value,
-            };
-            console.log(formData);
+            formData.files = files.value;
             usersStore.createPost(formData);
+            newPost.value = '';
+            files.value = [];
             return;
         }
-        usersStore.createPost(newPost.value);
+        usersStore.createPost(formData);
+        newPost.value = '';
+        files.value = [];
     };
 </script>
 <template>
-    <div class="new-post-card">
+    <div class="new-post-card"
+        :class="{
+            'ring-1 ring-blue-700 ' : textAreaFocused,
+            'ring-0' : !textAreaFocused,
+        }"
+    >
         <textarea
             id="new-post-textarea"
-            class="w-full h-24 bg-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:border-transparent rounded-md"
+            @focus="textAreaFocused = true"
+            @blur="textAreaFocused = false"
+            class="w-full h-24 bg-sky-200 focus:outline-none focus:border-transparent focus:ring-0 focus:border-slate-200"
+            :class="{
+                'rounded-md' : files.length === 0,
+                'rounded-t-md' : files.length > 0,
+            }"
             placeholder="¿Qué estás pensando?"
             v-model="newPost"
         ></textarea>
@@ -71,7 +85,7 @@
             />
             <button
                 @click="$refs.fileInput.click()"
-                class="flex absolute bottom-11 left-1 z-10 bg-sky-100 hover:scale-110 border-t border-r border-slate-400 hover:bg-slate-300 hover:shadow-lg text-gray-800 font-bold p-1 rounded-tr-md mr-2">
+                class="flex absolute bottom-10 left-1.5 z-10 bg-sky-100 hover:scale-110 border-t border-r border-slate-400 hover:bg-slate-300 hover:shadow-lg text-gray-800 font-bold p-1 rounded-tr-md mr-2">
                 <svg class="w-4 h-4"
                     viewBox="0 0 1536 1792"
                     xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +99,9 @@
                 </span>
             </button>
         </div>
-        <div v-if="files.length > 0" class="flex flex-row flex-wrap w-full justify-start gap-1">
+        <div v-if="files.length > 0"
+            id="files-preview-container"
+            class="flex flex-row flex-wrap w-full justify-start gap-1 bg-sky-200 rounded-b-md">
             <div
                 v-for="file in files"
                 :key="file.name"
@@ -138,7 +154,7 @@
         <button
             :disabled="newPost.length === 0"
             @click.prevent="preparePost"
-            class="bg-sky-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-b-md"
+            class="bg-sky-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-b-md h-9"
         >
             Publicar
         </button>

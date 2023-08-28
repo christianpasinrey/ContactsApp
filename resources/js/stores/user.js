@@ -57,15 +57,17 @@ export const useUsersStore = defineStore('users', () => {
         let formData = new FormData();
         formData.append('body', data.body);
         formData.append('user_id', authUser.value.id);
-        formData.append('files', data.files);
-        console.log(formData.getAll('files'));
-        axios.post(route('posts.store'),formData,{
+        if(data.files){
+            for (let i = 0; i < data.files.length; i++) {
+                formData.append(i, data.files[i]);
+            }
+        }
++        axios.post(route('posts.store'),formData,{
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            authUser.value?.posts.push(response.data);
-            console.log(authUser.value?.posts);
+            authUser.value?.posts.unshift(response.data.data);
         }).catch(error => {
             console.log(error);
         });
