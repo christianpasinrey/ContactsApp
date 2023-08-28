@@ -18,7 +18,7 @@ class Post extends Model
         'user_id'
     ];
 
-    protected $with = ['files','comments'];
+    protected $with = ['files','comments','mentionedUsers'];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -30,5 +30,14 @@ class Post extends Model
 
     public function files(){
         return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function mentionedUsers(){
+        return $this->belongsToMany(
+            User::class,
+            'post_has_mentions',
+            'post_id',
+            'mentioned_user_id'
+        );
     }
 }

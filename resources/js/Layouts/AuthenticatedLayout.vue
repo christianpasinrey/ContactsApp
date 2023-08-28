@@ -263,9 +263,12 @@ onMounted(() => {
         </div>
     </div>
 </template>
-<style scoped>
+<style>
 .router-link-active.router-link-exact-active {
     color: #e53e3e !important;
     border-color: #e53e3e !important;
+}
+::-webkit-scrollbar {
+    display: none;
 }
 </style>

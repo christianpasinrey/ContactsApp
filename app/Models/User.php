@@ -113,6 +113,16 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, 'user_id')->orderBy('created_at', 'desc');
     }
 
+    public function mentions()
+    {
+        return $this->belongsToMany(
+            Post::class,
+            'post_has_mentions',
+            'mentioned_user_id',
+            'post_id'
+        );
+    }
+
     public function files()
     {
         return $this->hasMany(File::class, 'user_id');

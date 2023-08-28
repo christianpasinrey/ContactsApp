@@ -35,10 +35,13 @@ class PostController extends Controller
                 }
             }
         }
+        if($request->mentions){
+            $post->mentionedUsers()->sync($request->mentions);
+        }
         return response()
             ->json([
                 'message' => 'Post created successfully',
-                'data' => $post->load('files')
+                'data' => $post->load('files','mentionedUsers')
             ], 200);
     }
 

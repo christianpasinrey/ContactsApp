@@ -12,9 +12,7 @@
 <template>
     <div class="flex flex-row py-1 justify-start px-1 rounded-lg shadow-md bg-slate-200 h-fit w-full hover:bg-slate-300 transition-all duration-500 ease-in-out">
         <div class="timeline-post-body-wrapper">
-            <p>
-                {{ props.body }}
-            </p>
+            <p v-html="body"></p>
             <!-- preview of files -->
             <div class="flex flex-row flex-wrap justify-start gap-2 mt-6 relative">
                 <small

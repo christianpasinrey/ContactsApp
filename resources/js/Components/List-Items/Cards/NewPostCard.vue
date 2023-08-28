@@ -1,13 +1,20 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { useUsersStore } from '@/Stores/user';
 
     const URL = window.URL || window.webkitURL;
 
     const usersStore = useUsersStore();
 
+    const newPostTextarea = ref(null);
     const newPost = ref('');
     const files = ref([]);
+    const mentions = ref([]);
+    const isMention = ref(false);
+    const mentionWord = ref('');
+    const mentionOptions = ref([]);
+    const selectPosition = ref(0);
+
     const fileInput = ref(null);
     const textAreaFocused = ref(false);
 
@@ -42,6 +49,9 @@
         let formData = {
             body: newPost.value,
         };
+        if(mentions.value.length > 0){
+            formData.mentions = mentions.value.map((user) => user.id);
+        }
         if(files.value.length > 0)
         {
             formData.files = files.value;
@@ -52,8 +62,69 @@
         }
         usersStore.createPost(formData);
         newPost.value = '';
+        newPostTextarea.value.innerHTML = '';
         files.value = [];
+        mentions.value = [];
     };
+
+    const filteredUsersToMention = computed(()=>{
+        return usersStore.authUser?.contacts.filter((user) =>
+            user.name.toLowerCase().includes(mentionWord.value.toLowerCase())
+        );
+    })
+
+    const handleTextareaKeyup = (event) => {
+        selectPosition.value = window.getSelection().anchorOffset;
+        //tranform multiple spaces into one
+        newPostTextarea.value.innerHTML.replace(/&nbsp;/g, ' ');
+        const words = event.target.innerText.split(' ');
+        const lastWord = words[words.length - 1];
+        if (lastWord.startsWith('@')) {
+            isMention.value = true;
+            mentionWord.value = lastWord.slice(1);
+        } else {
+            isMention.value = false;
+            mentionWord.value = '';
+            mentionOptions.value = [];
+        }
+        newPostTextarea.value.focus();
+        newPost.value = newPostTextarea.value.innerHTML;
+    }
+
+    const handleMention = (id) => {
+        let user = usersStore.authUser?.contacts.find((user) => user.id === parseInt(id));
+        if (user && !mentions.value.includes(user)) {
+            mentions.value.push(user);
+        }else{
+            isMention.value = false;
+            mentionWord.value = '';
+            mentionOptions.value = [];
+            return toast.error('No se pudo mencionar al usuario');
+        }
+        newPostTextarea.value.innerHTML = newPostTextarea.value.innerHTML.replace(
+            `@${mentionWord.value}`,
+            `<a class="font-medium text-blue-600">
+                ${user.name}
+            </a>`
+        );
+        newPost.value = newPostTextarea.value.innerHTML;
+        isMention.value = false;
+        mentionWord.value = '';
+        mentionOptions.value = [];
+        newPostTextarea.value.scrollTop = newPostTextarea.value.scrollHeight;
+        //focus on the end of the text of newPostTextarea
+        placeCaretAtEnd();
+    }
+
+    const placeCaretAtEnd = () => {
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.setStart(newPostTextarea.value, newPostTextarea.value.childNodes.length);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      newPostTextarea.value.focus();
+    }
 </script>
 <template>
     <div class="new-post-card"
@@ -62,19 +133,36 @@
             'ring-0' : !textAreaFocused,
         }"
     >
-        <textarea
-            id="new-post-textarea"
-            @focus="textAreaFocused = true"
-            @blur="textAreaFocused = false"
-            class="w-full h-24 bg-sky-200 focus:outline-none focus:border-transparent focus:ring-0 focus:border-slate-200"
-            :class="{
-                'rounded-md' : files.length === 0,
-                'rounded-t-md' : files.length > 0,
-            }"
-            placeholder="¿Qué estás pensando?"
-            v-model="newPost"
-        ></textarea>
-        <div class="h-fit flex flex-row justify-start align-bottom items-end content-end">
+        <div id="new-post-text">
+            <p contenteditable="true"
+                id="new-post-textarea"
+                ref="newPostTextarea"
+                @keyup="handleTextareaKeyup"
+                @focus="textAreaFocused = true"
+                @blur="textAreaFocused = false"
+                class="w-full rounded-t-md cursor-text py-1 px-2 h-24 bg-sky-100 focus:outline-none focus:border-transparent focus:ring-0 focus:border-slate-200"
+                placeholder="¿Qué estás pensando?"
+            >
+            </p>
+            <select
+                v-if="isMention"
+                id="select-mention"
+                class="absolute top-10 w-fit h-10 bg-sky-200 rounded-md text-gray-800"
+                :class="`left-${selectPosition}`"
+                style="z-index: 1000"
+                @input="handleMention($event.target.value)"
+            >
+                <option
+                    v-for="option in filteredUsersToMention"
+                    :key="`mention-option-${option.id}`"
+                    :value="option.id"
+                >
+                    {{ option.name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="h-fit w-full bg-sky-300 flex flex-row justify-start align-bottom items-end content-end">
             <input
                 type="file"
                 class="hidden"
@@ -85,7 +173,7 @@
             />
             <button
                 @click="$refs.fileInput.click()"
-                class="flex absolute bottom-10 left-1.5 z-10 bg-sky-100 hover:scale-110 border-t border-r border-slate-400 hover:bg-slate-300 hover:shadow-lg text-gray-800 font-bold p-1 rounded-tr-md mr-2">
+                class="flex absolute bottom-10 left-1.5 z-10 bg-sky-100 hover:scale-110 border-t border-r border-slate-400 hover:bg-slate-300 hover:shadow-lg text-gray-800 font-bold p-1 rounded-tr-md mr-2 w-fit h-fit">
                 <svg class="w-4 h-4"
                     viewBox="0 0 1536 1792"
                     xmlns="http://www.w3.org/2000/svg">
@@ -154,7 +242,7 @@
         <button
             :disabled="newPost.length === 0"
             @click.prevent="preparePost"
-            class="bg-sky-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-b-md h-9"
+            class="bg-sky-500 hover:bg-blue-400 dark:bg-slate-600 dark:hover:bg-slate-800 text-white font-bold py-2 px-4 rounded-b-md h-9"
         >
             Publicar
         </button>

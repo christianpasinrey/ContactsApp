@@ -62,6 +62,9 @@ export const useUsersStore = defineStore('users', () => {
                 formData.append(i, data.files[i]);
             }
         }
+        if(data.mentions){
+            formData.append('mentions', data.mentions);
+        }
 +        axios.post(route('posts.store'),formData,{
             headers: {
                 'Content-Type': 'multipart/form-data'
