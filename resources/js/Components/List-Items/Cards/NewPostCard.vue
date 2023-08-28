@@ -106,13 +106,8 @@
             return toast.error('No se pudo mencionar al usuario');
         }
 
-        let newElement = document.createElement('span');
-        newElement.textContent = `${user.name}`;
-        newElement.onclick = () => goToUserProfile(user.id);
-        newElement.id = user.id;
-        newElement.classList.add('text-sky-600', 'font-bold', 'cursor-pointer','user-mentioned');
-        newPostTextarea.value.appendChild(newElement);
-
+        let newElement = `<span id="${user.id}" class="text-sky-600 font-bold cursor-pointer user-mentioned">${user.name}</span>`;
+        newPostTextarea.value.innerHTML += newElement + '<span>&nbsp;</span>';
         newPost.value = newPostTextarea.value.innerHTML;
         isMention.value = false;
         mentionWord.value = '';
@@ -123,13 +118,14 @@
     }
 
     const placeCaretAtEnd = () => {
-      const range = document.createRange();
-      const sel = window.getSelection();
-      range.setStart(newPostTextarea.value.childNodes[0], newPostTextarea.value.childNodes.length);
-      range.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(range);
-      newPostTextarea.value.focus();
+        let range = document.createRange();
+        let sel = window.getSelection();
+        range.setStart(newPostTextarea.value.lastChild, 1);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        newPostTextarea.value.focus();
     }
 
     const goToUserProfile = (id) => {
@@ -144,7 +140,7 @@
         }"
     >
         <div id="new-post-text">
-            <p contenteditable="true"
+            <div contenteditable="true"
                 id="new-post-textarea"
                 ref="newPostTextarea"
                 @keyup="handleTextareaKeyup"
@@ -153,7 +149,7 @@
                 class="w-full rounded-t-md cursor-text py-1 px-2 h-24 bg-sky-100 focus:outline-none focus:border-transparent focus:ring-0 focus:border-slate-200"
                 placeholder="¿Qué estás pensando?"
             >
-            </p>
+            </div>
             <select
                 v-if="isMention"
                 id="select-mention"
