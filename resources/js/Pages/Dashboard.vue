@@ -4,11 +4,37 @@
     import TimeLinePostCard from '@/Components/List-Items/Cards/TimeLinePostCard.vue';
     import NewPostCard from '@/Components/List-Items/Cards/NewPostCard.vue';
     import { useUsersStore } from '@/Stores/user';
-import { onBeforeMount } from 'vue';
+    import { onBeforeMount,onMounted, onUnmounted } from 'vue';
 
     const usersStore = useUsersStore();
+    const handleMainTimelineScroll = () => {
+        let element = document.getElementById('no-scrollbar-element');
+        let scrollPosition = element.scrollTop;
+        let scrollHeight = element.scrollHeight;
+        let clientHeight = element.clientHeight;
 
-    const posts = usersStore.authUser?.timeline;
+        if(scrollPosition + clientHeight >= scrollHeight){
+            usersStore.loadMoreTimeline();
+            element.removeEventListener('scroll',handleMainTimelineScroll);
+            setTimeout(()=>{
+                element.addEventListener('scroll',handleMainTimelineScroll);
+            },1000);
+        }
+    }
+    onBeforeMount(()=>{
+        usersStore.fetchTimeline();
+    })
+
+    onMounted(()=>{
+        let element = document.getElementById('no-scrollbar-element');
+        element.addEventListener('scroll',handleMainTimelineScroll);
+        console.log(usersStore.timeline);
+    })
+
+    onUnmounted(()=>{
+        let element = document.getElementById('no-scrollbar-element');
+        element.removeEventListener('scroll',handleMainTimelineScroll);
+    })
 
 </script>
 
@@ -23,7 +49,7 @@ import { onBeforeMount } from 'vue';
         >
             <NewPostCard/>
             <VerticalTimeLineList
-                :data="posts"
+                :data="usersStore.timeline?.data"
             >
                 <template #item="{ item }">
                     <VerticalTimelineItem

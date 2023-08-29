@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, reactive, onBeforeMount, onMounted } from 'vue';
+    import { ref, reactive, onBeforeMount, onMounted, onUnmounted } from 'vue';
     import axios from 'axios';
     import { useToast } from 'vue-toast-notification';
     import Modal from '@/Components/Modal.vue';
@@ -11,9 +11,9 @@
     const toast = useToast();
     const contacts = ref([]);
     const pagination = reactive({
-        links: [],
         current_page: 1,
         prev_page_url: null,
+        next_page_url: null,
     });
     const search_string = ref('');
     const timeout = ref(null);
@@ -53,9 +53,6 @@
             axios.get(route('contacts.search',search_string.value))
             .then((response) => {
                 contacts.value = response.data.data;
-                pagination.links = response.data.links.filter(
-                    (link) => !link.label.includes('Previous') && !link.label.includes('Next')
-                );
                 pagination.current_page = response.data.current_page;
                 pagination.next_page_url = response.data.next_page_url || null;
                 pagination.prev_page_url = response.data.prev_page_url;
@@ -68,13 +65,10 @@
         }, 700);
     };
 
-    const changePage = (url) => {
+    const loadDataOfNextPage = (url) => {
         axios.get(url)
         .then((response) => {
-            contacts.value = response.data.data;
-            pagination.links = response.data.links.filter(
-                (link) => !link.label.includes('Previous') && !link.label.includes('Next')
-            );
+            contacts.value.push(...response.data.data);
             pagination.current_page = response.data.current_page;
             pagination.next_page_url = response.data.next_page_url || null;
             pagination.prev_page_url = response.data.prev_page_url;
@@ -113,11 +107,21 @@
         searchContacts();
     });
 
+    const handleScrollEventForContacts = () => {
+        if(window.innerHeight + window.scrollY >= document.body.offsetHeight && pagination.next_page_url){
+            loadDataOfNextPage(pagination.next_page_url);
+            window.removeEventListener('scroll', handleScrollEventForContacts);
+            setTimeout(() => {
+                window.addEventListener('scroll', handleScrollEventForContacts);
+            }, 1000);
+        }
+    }
     onMounted(()=>{
-        /* document.addEventListener('load',function() {
-            var percent = Math.floor((Math.random() * 100) + 1) + "%";
-            document.getElementById("progress-bar").innerHTML = percent;
-        }); */
+        window.addEventListener('scroll',handleScrollEventForContacts);
+    })
+
+    onUnmounted(()=>{
+        window.removeEventListener('scroll',handleScrollEventForContacts);
     })
 </script>
 <template>
@@ -163,36 +167,6 @@
                     :key="`contact-${item.id}`" />
             </template>
         </FlexWrapList>
-        <div class="flex flex-row w-full justify-center gap-3 py-3 absolute bottom-0 left-0">
-            <button
-                :disabled="!pagination.prev_page_url"
-                class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-l-md"
-                :class="{
-                    'opacity-50 cursor-not-allowed': !pagination.prev_page_url
-                }"
-                @click.prevent="changePage(pagination.prev_page_url)"
-            >
-                Anterior
-            </button>
-            <button
-                v-for="link in pagination.links"
-                :key="`link-${link.label}`"
-                class="bg-sky-200 hover:bg-sky-700 text-gray-800 hover:text-gray-50 font-bold py-2 px-4"
-                @click.prevent="changePage(link.url)"
-            >
-                {{ link.label }}
-            </button>
-            <button
-                :disabled="!pagination.next_page_url"
-                class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-r-md"
-                :class="{
-                    'opacity-50 cursor-not-allowed': !pagination.next_page_url
-                }"
-                @click.prevent="changePage(pagination.next_page_url)"
-            >
-                Siguiente
-            </button>
-        </div>
     </section>
 
     <!-- CRUD MODALS -->

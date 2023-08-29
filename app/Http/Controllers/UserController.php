@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Validated;
 use App\Models\User;
 use App\Models\Post;
 use App\Http\Controllers\ContactDataController;
-use App\Models\ContactData;
-use App\Models\Scopes\ActiveAndPublicProfileUserScope;
 
 class UserController extends Controller
 {
@@ -99,7 +96,7 @@ class UserController extends Controller
         }
 
         return response()
-            ->json($contacts->orderBy('name', 'asc')->paginate(20));
+            ->json($contacts->orderBy('name', 'asc')->paginate(15));
     }
 
     public function searchUsers($search_string = null)
@@ -133,21 +130,18 @@ class UserController extends Controller
 
     public function getUserTimeLinePosts(User $user)
     {
-        $user_posts = $user->posts()->get();
-        foreach($user_posts as $post){
-            $post->user = auth()->user();
-        }
+        //return posts of auth user and posts of every contact of auth user paginated
+        $authUser = User::find(auth()->user()->id);
+        $contacts = $authUser->contacts()->get();
+        $contacts_ids = $contacts->pluck('id')->toArray();
+        $contacts_ids[] = $authUser->id;
+        $paginated_posts = Post::with('user','mentionedUsers','files','comments')
+            ->whereIn('user_id', $contacts_ids)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5)->withPath('users/'.$user->id.'/timeline');
 
-        $posts_of_contacts = collect();
-        foreach($user->contacts as $contact){
-            $contact_posts = $contact->posts()->get();
-            $posts_of_contacts = $posts_of_contacts->merge($contact_posts);
-        }
-        foreach($posts_of_contacts as $post){
-            $post->user = $post->user()->first();
-        }
+        //change path of paginated posts to users/{id}/timeline
 
-        $posts = $user_posts->merge($posts_of_contacts)->sortByDesc('created_at');
-        return $posts;
+        return $paginated_posts;
     }
 }

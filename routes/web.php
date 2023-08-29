@@ -33,13 +33,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/home', function () {
-    $controller = new UserController();
-    $user = User::find(auth()->user()->id);
-    $user->load('contacts','files');
-    $user->timeline = $controller->getUserTimeLinePosts($user);
-    return Inertia::render('Home', [
-        'user' => $user
-    ]);
+    return Inertia::render('Home');
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
@@ -54,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class);
     Route::resource('files', FileController::class);
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/timeline', [UserController::class, 'getUserTimeLinePosts'])->name('users.timeline');
     Route::get('/contacts', [UserController::class, 'getContacts'])->name('contacts.index');
     Route::get('/contacts/search/{search_string?}', [UserController::class, 'searchContacts'])->name('contacts.search');
     Route::get('/search/users/{search_string?}', [UserController::class, 'searchUsers'])->name('users.search');

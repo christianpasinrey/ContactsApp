@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
@@ -54,6 +54,12 @@ const goToUserProfile = (user) => {
         params: { id: user.id },
     });
 }
+
+
+function getUserData() {
+    usersStore.authUser = page.props.auth.user;
+}
+
 onMounted(() => {
     let element = document.getElementById('users-list');
     document.addEventListener('click', (event) => {
@@ -62,12 +68,16 @@ onMounted(() => {
         }
     });
 });
+
+onBeforeMount(() => {
+    getUserData();
+});
 </script>
 
 <template>
     <div>
         <div class="min-h-screen dark:bg-gray-900 relative">
-            <nav class="absolute top-0 left-0 z-[999] w-screen h-[7vh] bg-gradient-to-r from-slate-200 via-gray-300 to-sky-500 dark:from-slate-500 dark:via-gray-600 dark:to-sky-950 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+            <nav class="fixed top-0 left-0 z-[999] w-screen h-[7vh] bg-gradient-to-r from-slate-200 via-gray-300 to-sky-500 dark:from-slate-500 dark:via-gray-600 dark:to-sky-950 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">

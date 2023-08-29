@@ -1,19 +1,5 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { useUsersStore } from '@/Stores/user';
-    import { onBeforeMount } from 'vue';
-
-    const usersStore = useUsersStore();
-    const props = defineProps({
-        user: {
-            type: Object,
-            required: false,
-        },
-    });
-
-    onBeforeMount(() => {
-        usersStore.authUser = props.user;
-    });
 
 </script>
 <template>

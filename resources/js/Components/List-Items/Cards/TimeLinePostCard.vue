@@ -1,11 +1,13 @@
 <script setup>
-    import { onMounted, computed } from 'vue';
+    import { computed } from 'vue';
     //import utilities from date-fns to calculate durations
-    import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+    import { formatDistance } from 'date-fns'
     import { es } from 'date-fns/locale'
     import { useUsersStore } from '@/Stores/user';
+    import { useRouter } from 'vue-router';
 
     const usersStore = useUsersStore();
+    const vueRouter = useRouter();
     const props = defineProps(['body', 'files','createdAt','mentions','user']);
     const handleFilePath = (file) => {
         return `storage/files/${file.path.replace('public/files/', '')}`
@@ -15,6 +17,18 @@
         //return time passed from now to created_at using date-fns in spanish
         return formatDistance(new Date(props.createdAt), new Date(), { locale: es });
     });
+
+    async function goToUserProfile(id) {
+        try {
+            const fetchedUser = await usersStore.fetchUser(id);
+
+            if (fetchedUser) {
+                vueRouter.push({ name: 'users.profile', params: { id: id } });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 </script>
 <template>
     <div class="flex flex-row py-1 justify-start px-1 rounded-lg shadow-md bg-slate-200 h-fit w-full hover:bg-slate-300 transition-all duration-500 ease-in-out">
@@ -22,8 +36,8 @@
             <div class="flex flex-row justify-end absolute top-2 left-0 w-full">
                 <h3 v-if="user?.id !== usersStore.authUser?.id"
                     class="mx-2 font-medium text-sky-600 cursor-pointer"
-                    @click.prevent="goToUserProfile"
-                >{{ user.name }}
+                    @click.prevent="goToUserProfile(user?.id)"
+                >{{ user?.name }}
             </h3>
             </div>
             <p v-html="body"></p>
