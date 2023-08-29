@@ -77,7 +77,7 @@ onBeforeMount(() => {
 <template>
     <div>
         <div class="min-h-screen relative flex">
-            <nav class="hidden md:flex flex-col z-[999] md:w-3/12 h-screen bg-gradient-to-r from-slate-200 via-gray-300 to-sky-500 dark:from-slate-500 dark:via-gray-600 dark:to-sky-950 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+            <nav class="font-robotoBlack hidden md:flex flex-col z-[999] md:w-3/12 h-screen shadow-md bg-gradient-to-r from-slate-400 via-gray-300 to-slate-300 dark:from-slate-600 dark:via-gray-500 dark:to-slate-500 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex flex-col text-center items-center content-center">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center dark:text-gray-50 font-bold my-6">
@@ -183,7 +183,7 @@ onBeforeMount(() => {
             </nav>
 
             <!-- Page Content -->
-            <main class="flex flex-col h-screen z-10 relative w-full">
+            <main class="flex flex-col h-screen z-10 relative w-full font-robotoLight">
 
                 <RouterView :key="$route.fullPath" />
                 <slot />
@@ -225,8 +225,7 @@ onBeforeMount(() => {
                     </div>
                 </div>
             </aside>
-            <img src="storage/app-bg.png" object-fit="cover" class="absolute inset-0 w-full h-full object-cover z-[-2] dark:opacity-60" alt="fondo-contactsApp">
-            <div class="absolute inset-0 w-full h-full bg-slate-100 dark:bg-slate-600 opacity-50 z-[-1]"></div>
+            <div class="absolute inset-0 w-full h-full bg-slate-700 dark:bg-slate-950 opacity-50 z-[-1]"></div>
         </div>
     </div>
 </template>

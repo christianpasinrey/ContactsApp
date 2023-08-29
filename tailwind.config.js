@@ -14,6 +14,11 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                robotoBlack: ['Roboto-Black'],
+                robotoBold: ['Roboto-Bold'],
+                robotoLight: ['Roboto-Light'],
+                robotoBlackItalic: ['Roboto-BlackItalic'],
+                robotoBoldItalic: ['Roboto-BoldItalic'],
             },
         },
     },
