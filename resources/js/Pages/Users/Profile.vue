@@ -105,9 +105,9 @@
             <ModalHead title="Añadir contacto" @close="toggleModal(null)" />
             <div class="flex flex-col py-6">
                 <div class="flex flex-row px-6">
-                    <p>
+                    <p class="dark:text-gray-100">
                         ¿Estás seguro de que quieres añadir a
-                        <em><strong> {{ user?.name }} </strong></em>
+                        <em><strong class="dark:text-gray-500"> {{ user?.name }} </strong></em>
                         como contacto?
                     </p>
                 </div>

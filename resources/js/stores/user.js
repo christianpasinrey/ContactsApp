@@ -57,6 +57,7 @@ export const useUsersStore = defineStore('users', () => {
     const addSelectedUserAsContact = () =>{
         axios.post(route('users.contacts.add'),selectedUser.value)
         .then(response => {
+            selectedUser.value.is_contact_of_auth_user = true;
             authUser.value?.contacts.push(response.data);
         }).catch(error => {
             console.log(error);
