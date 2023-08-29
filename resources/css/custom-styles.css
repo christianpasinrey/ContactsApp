@@ -22,15 +22,15 @@
  }
 
  .user-profile-layout{
-    @apply flex flex-row relative;
+    @apply flex flex-col relative;
  }
 
  section[user-profile-basic-info-left-bar]{
-    @apply flex flex-col justify-evenly md:absolute shadow-md md:top-0 md:left-0 border-r sm:w-full md:w-3/12 lg:w-2/12 p-8 bg-gradient-to-tr from-cyan-950 via-sky-800 to-gray-300 opacity-80 h-[93vh]
+    @apply flex flex-row justify-evenly md:absolute shadow-md md:top-0 md:left-0 border-r sm:w-full md:w-3/12 lg:w-2/12 p-8 bg-gradient-to-tr from-cyan-950 via-sky-800 to-gray-300 opacity-80 h-[93vh]
  }
  /* section with name user-profile-right-bar */
  section[user-profile-right-bar]{
-    @apply flex flex-col flex-wrap text-center overflow-x-hidden justify-evenly md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-2/12 py-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
+    @apply flex flex-row flex-wrap text-center overflow-x-hidden justify-evenly md:absolute shadow-md md:top-0 md:right-0 sm:w-full md:w-2/12 py-8 bg-gradient-to-br from-gray-300 via-sky-800 to-cyan-950 opacity-80 h-[93vh]
  }
 
  section[user-timeline]{

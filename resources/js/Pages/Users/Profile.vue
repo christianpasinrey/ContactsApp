@@ -35,48 +35,56 @@
     );
 </script>
 <template>
-    <div class="user-profile-layout">
+    <div>
         <section
-            user-profile-basic-info-left-bar
+            class="flex flex-row justify-center items-center gap-4 py-4 relative"
         >
-            <div class="flex flex-row justify-center">
-                <div class="flex flex-col">
-                    <h4 class="text-lg font-bold text-gray-100">{{ user?.name }}</h4>
+            <div class="flex flex-col">
+                <div class="mt-12">
+                    <div class="flex flex-row w-full gap-4">
+                        <h4 class="text-4xl font-bold text-gray-100">{{ user?.name }}</h4>
+
+                    </div>
                     <span class="text-md text-gray-200 mb-4"> {{ user?.email }}</span>
+                </div>
+                <div class="my-3 justify-center flex">
                     <SocialIcons
                         :contact="user"
                         :size="2"
                     />
                 </div>
-            </div>
-            <button
-                v-if="!user?.is_contact_of_auth_user"
-                @click.prevent="toggleModal('add-contact')"
-                class="py-0.5 px-1 hover:scale-110 hover:shadow-lg hover:ring-1 hover:ring-blue-700 rounded-md w-full text-gray-100 font-medium bg-sky-700 hover:bg-blue-500 transition-all duration-500 ease-in-out">
-                AÑADIR CONTACTO
-            </button>
-        </section>
-        <section
-            user-profile-right-bar
-        >
-            <div class="flex flex-row">
-                <div class="flex flex-col px-4">
-                    <div
-                        class="flex flex-row justify-center"
-                        v-for="e in user?.emails"
-                        :key="`contactdata-${e.id}`"
-                        >
-                        <span class="text-gray-100 font-medium cursor-default">{{ e.value }}</span>
-                    </div>
-                    <div
-                        class="flex flex-row justify-center"
-                        v-for="p in user?.phones"
-                        :key="`contactdata-${p.id}`"
-                        >
-                        <span class="text-gray-100 font-medium cursor-default">{{ p.value }}</span>
-                    </div>
+                <div class="my-3 justify-center flex">
+                    <button
+                        v-if="!user?.is_contact_of_auth_user"
+                        @click.prevent="toggleModal('add-contact')"
+                        class="w-fit py-0.5 px-2 hover:scale-110 hover:shadow-lg hover:ring-1 hover:ring-blue-700 rounded-md text-gray-100 font-medium bg-sky-700 hover:bg-blue-500 transition-all duration-500 ease-in-out">
+                        AÑADIR
+                    </button>
                 </div>
             </div>
+
+        </section>
+        <section
+            class="flex flex-row justify-center items-center gap-4 py-4"
+        >
+            <div class="flex flex-col px-4">
+                <div
+                    class="flex flex-row justify-center"
+                    v-for="e in user?.emails"
+                    :key="`contactdata-${e.id}`"
+                    >
+                    <span class="text-gray-100 font-medium cursor-default">{{ e.value }}</span>
+                </div>
+                <div
+                    class="flex flex-row justify-center"
+                    v-for="p in user?.phones"
+                    :key="`contactdata-${p.id}`"
+                    >
+                    <span class="text-gray-100 font-medium cursor-default">{{ p.value }}</span>
+                </div>
+            </div>
+        </section>
+        <section>
             <div class="flex flex-row flex-wrap">
                 <FlexWrapList
                     v-if="user?.contacts"
@@ -90,7 +98,7 @@
             </div>
         </section>
         <section
-            name="user-timeline">
+            class="flex flex-row">
             {{ user?.posts }}
         </section>
         <Modal :show="showModal('add-contact')">

@@ -76,8 +76,8 @@ onBeforeMount(() => {
 
 <template>
     <div>
-        <div class="min-h-screen dark:bg-gray-900 relative flex">
-            <nav class="hidden md:flex flex-col z-[999] md:w-2/12 h-screen bg-gradient-to-r from-slate-200 via-gray-300 to-sky-500 dark:from-slate-500 dark:via-gray-600 dark:to-sky-950 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div class="min-h-screen relative flex">
+            <nav class="hidden md:flex flex-col z-[999] md:w-3/12 h-screen bg-gradient-to-r from-slate-200 via-gray-300 to-sky-500 dark:from-slate-500 dark:via-gray-600 dark:to-sky-950 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex flex-col text-center items-center content-center">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center dark:text-gray-50 font-bold my-6">
@@ -135,41 +135,7 @@ onBeforeMount(() => {
                             </template>
                         </Dropdown>
                     </div>
-                    <div class="shrink-0 flex items-center px-0 dark:text-gray-50 font-bold w-full">
-                        <div class="relative flex w-full">
-                            <input type="search"
-                            class="w-full mx-6 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
-                            placeholder="Buscar..."
-                            v-model="searchUsersString"
-                            @keyup.prevent="handleSearchUsers($event)"
-                            >
-                            <output
-                                :class="{
-                                    'hidden': usersStore.users?.length == 0,
-                                    'block': usersStore.users?.length > 0
-                                }"
-                                id="users-list"
-                                class="absolute top-8 ml-6 z-[1000] shadow-md rounded-b-md h-fit w-9/12 max-h-64 overflow-y-auto transition-all duration-700 ease-in-out bg-slate-100 dark:bg-slate-400 ">
-                                <ol>
-                                    <li
-                                        v-for="user in usersStore.users"
-                                        :key="`user-${user.id}`"
-                                        id="user-item-list"
-                                        style="list-style-type: none;"
-                                        class="text-black text-start px-2 dark:text-gray-50 dark:font-medium cursor-pointer w-full hover:bg-slate-200 dark:hover:bg-slate-600"
-                                        :class="{
-                                            'py-1.5' : usersStore.users.indexOf(user) == 0,
-                                            'py-1' : usersStore.users.indexOf(user) != 0,
-                                            'border-b border-gray-300 dark:border-gray-700': usersStore.users.indexOf(user) != usersStore.users.length - 1
-                                        }"
-                                        @click.prevent="goToUserProfile(user)"
-                                    >
-                                        {{ user.name }}
-                                    </li>
-                                </ol>
-                            </output>
-                        </div>
-                    </div>
+
                     <!-- Navigation Links -->
                     <div class="hidden sm:ml-10 md:ml-0 sm:flex md:flex-col w-full content-center text-center my-12">
                         <RouterLink to="/dashboard">
@@ -218,11 +184,49 @@ onBeforeMount(() => {
 
             <!-- Page Content -->
             <main class="flex flex-col h-screen z-10 relative w-full">
+
                 <RouterView :key="$route.fullPath" />
                 <slot />
-                <img src="storage/app-bg.png" object-fit="cover" class="absolute inset-0 w-full h-full object-cover z-[-2] dark:opacity-60" alt="fondo-contactsApp">
-                <div class="absolute inset-0 w-full h-full bg-slate-100 dark:bg-slate-600 opacity-50 z-[-1]"></div>
             </main>
+            <aside class="hidden md:flex md:flex-col md:w-5/12 relative">
+                <div class="shrink-0 flex items-center px-0 dark:text-gray-50 font-bold absolute top-6 left-0 w-full lg:w-8/12">
+                    <div class="relative flex w-full">
+                        <input type="search"
+                        class="w-full mx-6 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                        placeholder="Buscar..."
+                        v-model="searchUsersString"
+                        @keyup.prevent="handleSearchUsers($event)"
+                        >
+                        <output
+                            :class="{
+                                'hidden': usersStore.users?.length == 0,
+                                'block': usersStore.users?.length > 0
+                            }"
+                            id="users-list"
+                            class="absolute top-8 ml-6 z-[1000] shadow-md rounded-b-md h-fit w-10/12 max-h-64 overflow-y-auto transition-all duration-700 ease-in-out bg-slate-100 dark:bg-slate-400 ">
+                            <ol>
+                                <li
+                                    v-for="user in usersStore.users"
+                                    :key="`user-${user.id}`"
+                                    id="user-item-list"
+                                    style="list-style-type: none;"
+                                    class="text-black text-start px-2 dark:text-gray-50 dark:font-medium cursor-pointer w-full hover:bg-slate-200 dark:hover:bg-slate-600"
+                                    :class="{
+                                        'py-1.5' : usersStore.users.indexOf(user) == 0,
+                                        'py-1' : usersStore.users.indexOf(user) != 0,
+                                        'border-b border-gray-300 dark:border-gray-700': usersStore.users.indexOf(user) != usersStore.users.length - 1
+                                    }"
+                                    @click.prevent="goToUserProfile(user)"
+                                >
+                                    {{ user.name }}
+                                </li>
+                            </ol>
+                        </output>
+                    </div>
+                </div>
+            </aside>
+            <img src="storage/app-bg.png" object-fit="cover" class="absolute inset-0 w-full h-full object-cover z-[-2] dark:opacity-60" alt="fondo-contactsApp">
+            <div class="absolute inset-0 w-full h-full bg-slate-100 dark:bg-slate-600 opacity-50 z-[-1]"></div>
         </div>
     </div>
 </template>

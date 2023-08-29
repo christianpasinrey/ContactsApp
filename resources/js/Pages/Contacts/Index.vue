@@ -125,7 +125,7 @@
     })
 </script>
 <template>
-    <div class="flex flex-row pt-4 justify-center">
+    <div class="flex flex-row pt-12 justify-center">
         <div class="w-full md:w-6/12">
             <form>
                 <input type="search"
@@ -153,7 +153,7 @@
         </progress>
     </section>
     <section name="contacts-list"
-        class="px-auto py-4"
+        class="px-auto py-4 overflow-y-auto h-full w-full"
         v-else
     >
         <FlexWrapList
