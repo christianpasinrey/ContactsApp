@@ -11,7 +11,6 @@ export const useUsersStore = defineStore('users', () => {
     const users = ref(null);
     const selectedUser = ref(null);
     const selectedUsers = ref([]);
-    const timeline_current_page = ref(null);
     const timeline_next_page_url = ref(null);
     const timeline = ref(null);
 
@@ -86,34 +85,6 @@ export const useUsersStore = defineStore('users', () => {
         });
     }
 
-    const handleFetchTimeline = () => {
-        if(timeline_next_page_url.value != null){
-           return fetchTimeline();
-        }
-        return;
-    }
-    const fetchTimeline = () => {
-        axios.get(route('users.timeline',authUser.value?.id))
-        .then(response => {
-            timeline.value = response.data;
-        }).catch(error => {
-            console.log(error);
-        });
-    }
-
-    const loadMoreTimeline = () => {
-        if(timeline.value.next_page_url != null){
-            axios.get(route('users.timeline',authUser.value?.id) + `?page=${timeline.value.current_page + 1}`)
-            .then(response => {
-                timeline.value.current_page = response.data.current_page;
-                timeline.value.next_page_url = response.data.next_page_url ? timeline.value.current_page + 1 : null;
-                timeline.value.data = timeline.value.data.concat(response.data.data);
-            }).catch(error => {
-                console.log(error);
-            });
-        }
-    }
-
     function getUserById(id) {
         return users.value.find(user => user.id === id);
     }
@@ -132,9 +103,6 @@ export const useUsersStore = defineStore('users', () => {
     // @ts-ignore
     return {
         authUser,
-        timeline_current_page,
-        timeline_next_page_url,
-        timeline,
         users,
         selectedUser,
         setAuthUser,
@@ -143,9 +111,6 @@ export const useUsersStore = defineStore('users', () => {
         addSelectedUserAsContact,
         toggleUserInSelectedUsers,
         createPost,
-        handleFetchTimeline,
-        fetchTimeline,
-        loadMoreTimeline,
         setUsers,
         getUserById,
         getUsersList,

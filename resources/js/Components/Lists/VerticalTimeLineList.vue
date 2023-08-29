@@ -27,7 +27,6 @@
     onMounted(()=>{
         //get all elements that includes 'user-mentioned' in class
         let mentionLinks = document.querySelectorAll('.user-mentioned');
-        console.log(mentionLinks)
         mentionLinks?.forEach((link)=>{
             link.addEventListener('click',(e)=>{
                 e.preventDefault();

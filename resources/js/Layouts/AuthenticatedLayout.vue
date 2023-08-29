@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/vue3';
 import { useDark } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { usePage } from '@inertiajs/vue3';
-import  { useUsersStore } from '@/Stores/user';
+import { useUsersStore } from '@/Stores/User';
 
 const usersStore = useUsersStore();
 const page = usePage();

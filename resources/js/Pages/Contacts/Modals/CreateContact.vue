@@ -107,7 +107,6 @@
 
     const newContactIsInvalid = () =>{
         let isInvalid = false;
-        console.log(newContact.value);
         if(newContact.value.name === '') {
             errors.value.newContact.name.status = true;
             isInvalid = true;
