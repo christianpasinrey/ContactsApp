@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useTimelineStore } from './timeline.js';
 import axios from 'axios'
 // You can name the return value of `defineStore()` anything you want,
 // but it's best to use the name of the store and surround it with `use`
@@ -13,7 +14,7 @@ export const useUsersStore = defineStore('users', () => {
     const selectedUsers = ref([]);
     const timeline_next_page_url = ref(null);
     const timeline = ref(null);
-
+    const timelineStore = useTimelineStore();
     // actions
     function setAuthUser(user) {
         authUser.value = user;
@@ -79,7 +80,7 @@ export const useUsersStore = defineStore('users', () => {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            fetchTimeline()
+            timelineStore.fetchTimeline(authUser.value.id);
         }).catch(error => {
             console.log(error);
         });
