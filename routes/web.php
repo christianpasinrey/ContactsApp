@@ -33,7 +33,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/home', function () {
-    return Inertia::render('Home');
+    return Inertia::render('AuthenticatedLayout');
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {

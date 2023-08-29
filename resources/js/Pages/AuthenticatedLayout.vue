@@ -81,9 +81,11 @@ onBeforeMount(() => {
                 <div class="flex flex-col text-center items-center content-center">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center dark:text-gray-50 font-bold my-6">
-                        <Link :href="route('home')">
-                            Contacts
-                        </Link>
+                        <RouterLink to="dashboard" >
+                            <span class="nav-link-btn">
+                                Contacts
+                            </span>
+                        </RouterLink>
                     </div>
                     <div class="flex my-12">
                         <Dropdown align="right" width="36">
