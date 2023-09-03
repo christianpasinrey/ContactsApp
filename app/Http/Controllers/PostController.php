@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
+use App\Models\Comment;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Http\Request;
 use App\Http\Controllers\FileController;
 
 class PostController extends Controller
@@ -86,6 +89,48 @@ class PostController extends Controller
         return response()
             ->json([
                 'message' => 'Post deleted successfully'
+            ], 200);
+    }
+
+    public function repost(Post $post)
+    {
+        $user = User::find(auth()->user()->id);
+        $post_was_reposted = $user->reposts()->where('post_id', $post->id)->exists();
+        if($post_was_reposted){
+            $post->repostedByUsers()
+            ->where('user_id', $user->id)
+            ->updateExistingPivot($user->id,
+                ['reposted_count' => $post->repostedByUsers()
+                    ->where('user_id', $user->id)
+                    ->reposted_count + 1
+                ]
+            );
+        }
+        $post->reposted_count = $post->reposted_count + 1;
+        $post->save();
+        return response()
+            ->json([
+                'message' => 'Post reposted successfully',
+                'data' => $post
+            ], 200);
+    }
+
+    public function commentPost(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'body' => 'required|string',
+        ]);
+
+        $comment = Comment::create([
+            'body' => $validated['body'],
+            'user_id' => auth()->user()->id,
+            'post_id' => $post->id
+        ]);
+
+        return response()
+            ->json([
+                'message' => 'Comment created successfully',
+                'data' => $comment
             ], 200);
     }
 }

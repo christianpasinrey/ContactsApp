@@ -56,6 +56,11 @@ Route::middleware('auth')->group(function () {
 
     //User files
     Route::get('/files/user/{id}', [FileController::class, 'getUserFiles'])->name('files.user');
+
+    //Post interactions
+    Route::post('/posts/{post}/like', [PostController::class, 'likePost'])->name('posts.like');
+    Route::post('/posts/{post}/repost', [PostController::class, 'repostPost'])->name('posts.repost');
+    Route::post('/posts/{post}/comment', [PostController::class, 'commentPost'])->name('posts.comment');
 });
 
 require __DIR__.'/auth.php';

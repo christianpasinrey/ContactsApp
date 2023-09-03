@@ -20,6 +20,7 @@ class Post extends Model
 
     protected $with = ['files','comments','mentionedUsers'];
 
+    protected $appends = ['liked','reposted','reposted_count'];
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -39,5 +40,35 @@ class Post extends Model
             'post_id',
             'mentioned_user_id'
         );
+    }
+
+    public function repostedByUsers(){
+        return $this->belongsToMany(
+            User::class,
+            'user_reposts',
+            'post_id',
+            'user_id'
+        );
+    }
+
+    public function likedByUsers(){
+        return $this->belongsToMany(
+            User::class,
+            'user_likes_posts',
+            'post_id',
+            'user_id'
+        );
+    }
+
+    public function getLikedAttribute(){
+        return $this->likedByUsers()->where('user_id', auth()->user()->id)->exists();
+    }
+
+    public function getRepostedAttribute(){
+        return $this->repostedByUsers()->where('user_id', auth()->user()->id)->exists();
+    }
+
+    public function getRepostedCountAttribute(){
+        return $this->repostedByUsers()->count();
     }
 }

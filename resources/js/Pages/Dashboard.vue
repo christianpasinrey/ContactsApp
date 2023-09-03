@@ -65,6 +65,13 @@
                             :createdAt="item.created_at"
                             :mentions="item.mentions"
                             :user="item.user"
+                            :liked="item.liked"
+                            :reposted="item.reposted"
+                            :repostedCount="item.reposted_count"
+                            :comments="item.comments"
+                            @repost="timelineStore.repostPost(item.id)"
+                            @like="timelineStore.likePost(item.id)"
+                            @comment="timelineStore.commentPost(item.id, $event)"
                         />
                     </template>
                 </VerticalTimelineItem>

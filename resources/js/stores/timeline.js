@@ -32,9 +32,51 @@ export const useTimelineStore = defineStore('timeline', () => {
         }
     }
 
+    const repostPost = (postId) => {
+        axios.post(route('posts.repost',postId))
+        .then(response => {
+            timeline.value.data.unshift(response.data);
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    const likePost = (postId) => {
+        axios.post(route('posts.like',postId))
+        .then(response => {
+            timeline.value.data = timeline.value.data.map(post => {
+                if(post.id == postId){
+                    post.likes_count = response.data.likes_count;
+                    post.is_liked = response.data.is_liked;
+                }
+                return post;
+            });
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    const commentPost = (postId,comment) => {
+        axios.post(route('posts.comment',postId),{
+            body: comment
+        }).then((response)=>{
+            timeline.value.data.find((post)=>{
+                if(post.id == postId){
+                    post.comments.push(response.data);
+                    post.comments_count++;
+                }
+            });
+        }).catch((error)=>{
+            console.log(error);
+        });
+    }
+
     return {
         timeline,
         fetchTimeline,
-        loadMoreTimeline
+        loadMoreTimeline,
+        repostPost,
+        likePost,
+        commentPost
     }
 });

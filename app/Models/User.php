@@ -113,6 +113,26 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, 'user_id')->orderBy('created_at', 'desc');
     }
 
+    public function reposts()
+    {
+        return $this->belongsToMany(
+            Post::class,
+            'user_reposts',
+            'user_id',
+            'post_id'
+        );
+    }
+
+    public function likedPosts()
+    {
+        return $this->belongsToMany(
+            Post::class,
+            'user_likes_posts',
+            'user_id',
+            'post_id'
+        );
+    }
+
     public function mentions()
     {
         return $this->belongsToMany(

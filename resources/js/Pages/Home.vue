@@ -1,5 +1,4 @@
 <script setup>
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { onMounted } from 'vue';
     import { useRouter } from 'vue-router';
 
@@ -9,7 +8,5 @@
     })
 </script>
 <template>
-    <AuthenticatedLayout>
 
-    </AuthenticatedLayout>
 </template>
