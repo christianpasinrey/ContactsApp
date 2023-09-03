@@ -47,7 +47,7 @@ export const useTimelineStore = defineStore('timeline', () => {
             timeline.value.data = timeline.value.data.map(post => {
                 if(post.id == postId){
                     post.likes_count = response.data.likes_count;
-                    post.is_liked = response.data.is_liked;
+                    post.liked = response.data.liked;
                 }
                 return post;
             });

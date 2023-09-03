@@ -92,11 +92,17 @@
                     <p class="flex flex-end text-xs font-bold pt-5 pb-1 text-gray-500">Publicado hace {{ getDurationOfCreatedPost }}</p>
                 </div>
             </div>
+
             <PostCommentsList
                 v-if="showingComments"
                 :comments="props.comments"
                 @commented="$emit('comment', $event)"
             />
+
         </div>
     </div>
 </template>
+<style scoped>
+
+
+</style>

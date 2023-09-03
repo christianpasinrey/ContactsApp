@@ -92,7 +92,7 @@ class PostController extends Controller
             ], 200);
     }
 
-    public function repost(Post $post)
+    public function repostPost(Post $post)
     {
         $user = User::find(auth()->user()->id);
         $post_was_reposted = $user->reposts()->where('post_id', $post->id)->exists();
@@ -131,6 +131,22 @@ class PostController extends Controller
             ->json([
                 'message' => 'Comment created successfully',
                 'data' => $comment
+            ], 200);
+    }
+
+    public function likePost(Post $post)
+    {
+        $user = User::find(auth()->user()->id);
+        $post_was_liked = $user->likedPosts()->where('post_id', $post->id)->exists();
+        if($post_was_liked){
+            $user->likedPosts()->where('post_id', $post->id)->detach();
+        }else{
+            $user->likedPosts()->attach($post->id);
+        }
+        return response()
+            ->json([
+                'message' => 'Post liked successfully',
+                'data' => $post
             ], 200);
     }
 }
