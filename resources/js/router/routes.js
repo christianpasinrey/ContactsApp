@@ -2,6 +2,7 @@ import Contacts from '@/Pages/Contacts/Index.vue';
 import Dashboard from '@/Pages/Dashboard.vue';
 import AdvancedSearch from '@/Pages/AdvancedSearch.vue';
 import UserProfile from '@/Pages/Users/Profile.vue';
+import LiveNews from '@/Pages/LiveNews.vue';
 const routes = [
     {
         path: '/dashboard',
@@ -24,6 +25,11 @@ const routes = [
         name: 'users.profile',
         component: UserProfile,
     },
+    {
+        path: '/live-news',
+        name: 'live-news',
+        component: LiveNews
+    }
 ];
 
 export default routes;

@@ -5,6 +5,7 @@ use App\Http\Controllers\ContactDataController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\LiveNewsController;
 
 use App\Models\User;
 
@@ -61,6 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/like', [PostController::class, 'likePost'])->name('posts.like');
     Route::post('/posts/{post}/repost', [PostController::class, 'repostPost'])->name('posts.repost');
     Route::post('/posts/{post}/comment', [PostController::class, 'commentPost'])->name('posts.comment');
+
+    //get News from mediaStack
+    Route::post('/news', [LiveNewsController::class, 'index'])->name('news.index');
 });
 
 require __DIR__.'/auth.php';

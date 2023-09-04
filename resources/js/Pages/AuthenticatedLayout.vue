@@ -150,6 +150,11 @@ onBeforeMount(() => {
                                 Contactos
                             </span>
                         </RouterLink>
+                        <RouterLink to="/live-news">
+                            <span class="nav-link-btn">
+                                Noticias
+                            </span>
+                        </RouterLink>
                         <RouterLink to="/advanced-search" id="advanced-search-page-button" class="hidden">
                         </RouterLink>
                     </div>

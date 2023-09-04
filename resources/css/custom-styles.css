@@ -46,6 +46,6 @@
 }
 
 .timeline-post-body-wrapper{
-    @apply bg-slate-100 w-full px-3 pt-6 rounded-md shadow-md relative
+    @apply bg-slate-300 w-full px-3 pt-6 rounded-md shadow-md relative
 }
 

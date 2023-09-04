@@ -42,7 +42,7 @@
 </script>
 <template>
     <div
-        class="w-full grid grid-cols-12 pt-4 justify-start px-5 py-4 relative">
+        class="w-full grid grid-cols-12 gap-6 justify-start px-5 py-4 relative">
         <div
             class="flex col-span-12 justify-center items-center"
             v-for="item in orderedData"

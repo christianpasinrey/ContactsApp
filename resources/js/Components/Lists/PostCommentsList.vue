@@ -5,6 +5,27 @@
     defineEmits(['commented']);
 
     const newComment = ref('');
+
+    function shortName(name) {
+        return name.split(' ').map((n)=>n[0]).join('');
+    }
+
+    const generateTitleHtmlTooltip = (e,name) => {
+        const tooltip = document.createElement('div');
+        tooltip.classList.add('tooltip','text-xs','absolute','z-[100]','font-semibold','text-gray-100','bg-gray-800','px-2','py-1','rounded-md');
+        tooltip.innerHTML = name;
+        tooltip.style.top = `${e.clientY}px`;
+        tooltip.style.left = `${e.clientX}px`;
+        document.body.appendChild(tooltip);
+        console.log(tooltip);
+    }
+
+    const hideTitleHtmlTooltip = () => {
+        const tooltip = document.querySelector('.tooltip');
+        if(tooltip){
+            document.body.removeChild(tooltip);
+        }
+    }
 </script>
 <template>
     <Transition name="rollFromTop">
@@ -38,12 +59,13 @@
                 <div class="flex flex-col w-full">
                     <ol>
                         <li v-for="comment in comments" class="relative bg-slate-200 rounded-md px-2">
-                            <div class="flex flex-row items-center justify-start gap-4">
-                                <div class="flex flex-row items-center align-middle content-center justify-start">
-                                    <h4 class="text-gray-500 font-bold text-sm ml-2">{{ comment.user.name }}</h4>
-                                </div>
-                            </div>
-                            <div class="flex px-4 py-2">
+                            <div class="flex px-4 py-2 gap-3">
+                                <span
+                                    @mouseenter="generateTitleHtmlTooltip($event,comment.user.name)"
+                                    @mouseleave="hideTitleHtmlTooltip"
+                                    class="rounded-full ring-1 ring-slate-300 font-bold px-1.5 bg-slate-50 relative">
+                                    {{ shortName(comment.user.name) }}
+                                </span>
                                 <p class="text-gray-800">{{ comment.body }}</p>
                             </div>
                             <span class="absolute bottom-0 lef-0 w-full flex p-1 justify-end text-gray-400 text-sm font-semibold">{{ format(new Date(comment.created_at),'dd/MM/yyyy') }}</span>
@@ -67,6 +89,7 @@
     hr{
         border: 1px solid #909496;
     }
+
     @keyframes rollFromTop {
         0% {
             transform: translateY(-100%);
@@ -88,4 +111,5 @@
     .rollFromTop-leave-to {
         transform: translateY(-100%);
     }
+
 </style>
