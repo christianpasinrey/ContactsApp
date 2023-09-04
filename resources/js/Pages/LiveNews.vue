@@ -31,6 +31,7 @@
     const postNew = (news) => {
         //Create the html to post in the body parameter
         const html = `
+        <div class="flex w-full px-4 pt-4 pb-12 relative">
             <div class="flex flex-col">
                 <h3>${news.title}</h3>
                 <p>${news.description}</p>
@@ -42,11 +43,11 @@
             <div class="flex w-full absolute bottom-0 left-0 px-2 justify-end">
                 <div class="flex flex-col w-fit">
                     <div class="flex">
-                        <span>${news.author}</span>
-                        <span>${format(new Date(news.published_at), 'dd/MM/yyyy')}</span>
+                        <span class="font-bold italic">${news.author !== null ? news.author : '' + ' ' + format(new Date(news.published_at), 'dd/MM/yyyy') }</span>
                     </div>
                 </div>
             </div>
+        </div>
         `;
         axios.post(route('posts.store'),{
             body: html,
@@ -136,14 +137,15 @@
                     <div class="flex flex-col w-fit">
                         <div class="flex">
                             <span class="font-bold italic">{{ news.author }} {{ format(new Date(news.published_at), 'dd/MM/yyyy') }}</span>
-                            <span> </span>
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col w-full">
                     <h3>{{ news.title }}</h3>
                     <p>{{ news.description }}</p>
-                    <a :href="news.url" target="_blank">Ver noticia</a>
+                    <a :href="news.url" target="_blank"
+                        class="rounded-md mt-2 w-fit text-sm bg-sky-500 text-gray-50 font-bold p-2 hover:bg-sky-600 hover:scale-105 transition-all duration-500 ease-in-out"
+                    >Ver noticia</a>
                 </div>
                 <div class="flex flex-col">
                     <img :src="news.image" :alt="news.title">
