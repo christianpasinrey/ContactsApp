@@ -1,25 +1,17 @@
 {
     "version": 2,
-    "routes": [
-        {
-            "src": "/(css|js|images)/(.*)",
-            "dest": "public/$1/$2"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/api/index.php"
-        }
+    "builds": [
+      {
+        "src": "public/index.php",
+        "use": "@vercel/php",
+        "config": { "maxLambdaSize": "15mb" }
+      },
+      {
+        "src": "resources/js/app.js",
+        "use": "@vercel/node"
+      }
     ],
-    "env": {
-        "APP_CONFIG_CACHE": "/tmp/config.php",
-        "APP_EVENTS_CACHE": "/tmp/events.php",
-        "APP_PACKAGES_CACHE": "/tmp/packages.php",
-        "APP_ROUTES_CACHE": "/tmp/routes.php",
-        "APP_SERVICES_CACHE": "/tmp/services.php",
-        "VIEW_COMPILED_PATH": "/tmp",
-
-        "CACHE_DRIVER": "array",
-        "LOG_CHANNEL": "stderr",
-        "SESSION_DRIVER": "cookie"
-    }
+    "routes": [
+      { "src": "/(.*)", "dest": "public/index.php" }
+    ]
 }
