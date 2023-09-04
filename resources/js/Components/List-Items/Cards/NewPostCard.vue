@@ -1,6 +1,6 @@
 <script setup>
     import { ref, computed } from 'vue';
-    import { useUsersStore } from '@/Stores/user';
+    import { useUsersStore } from '@/stores/user';
     import { useRouter } from 'vue-router';
     const URL = window.URL || window.webkitURL;
 

@@ -2,7 +2,7 @@
     import { computed, ref } from 'vue';
     import { formatDistance } from 'date-fns'
     import { es } from 'date-fns/locale'
-    import { useUsersStore } from '@/Stores/user';
+    import { useUsersStore } from '@/stores/user';
     import { useRouter } from 'vue-router';
     import LikeButton from '@/Components/Buttons/LikeButton.vue';
     import RepostButton from '@/Components/Buttons/RepostButton.vue';
