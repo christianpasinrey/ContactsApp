@@ -1,12 +1,5 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "public/index.php",
-            "use": "@now/php",
-            "config": { "maxLambdaSize": "15mb" }
-        }
-    ],
     "routes": [
         {
             "src": "/(css|js|images)/(.*)",
