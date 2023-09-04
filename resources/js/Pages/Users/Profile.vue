@@ -3,7 +3,7 @@
     import { useRoute } from 'vue-router';
     import { watch,ref } from 'vue';
     import SocialIcons from '@/Components/SocialIcons.vue';
-    import SidebarContactCard from '@/Components/List-items/Cards/SidebarContactCard.vue';
+    import SidebarContactCard from '@/Components/List-Items/Cards/SidebarContactCard.vue';
     import FlexWrapList from '@/Components/Lists/FlexWrapList.vue';
     import Modal from '@/Components/Modal.vue';
     import ModalHead from '@/Components/ModalHead.vue';
