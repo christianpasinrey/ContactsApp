@@ -1,7 +1,7 @@
 <script setup>
-    import { useMediaStack } from '@/stores/mediastack';
-    import { useTimelineStore } from '@/stores/timeline';
-    import { useUsersStore } from '@/Stores/User';
+    import { useMediaStack } from '@/stores/mediastack.js';
+    import { useTimelineStore } from '@/stores/timeline.js';
+    import { useUsersStore } from '@/stores/user.js';
     import { ref } from 'vue';
     import { format } from 'date-fns';
     import axios from 'axios';

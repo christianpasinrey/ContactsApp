@@ -3,8 +3,8 @@
     import VerticalTimelineItem from '@/Components/List-Items/VerticalTimelineItem.vue';
     import TimeLinePostCard from '@/Components/List-Items/Cards/TimeLinePostCard.vue';
     import NewPostCard from '@/Components/List-Items/Cards/NewPostCard.vue';
-    import { useUsersStore } from '@/Stores/user';
-    import { useTimelineStore } from '@/Stores/timeline';
+    import { useUsersStore } from '@/stores/user.js';
+    import { useTimelineStore } from '@/stores/timeline.js';
     import { onBeforeMount,onMounted, onBeforeUnmount } from 'vue';
 
     const usersStore = useUsersStore();

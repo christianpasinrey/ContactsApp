@@ -1,5 +1,5 @@
 <script setup>
-    import { useUsersStore } from '@/Stores/User';
+    import { useUsersStore } from '@/stores/user.js';
     import { useRoute } from 'vue-router';
     import { watch,ref } from 'vue';
     import SocialIcons from '@/Components/SocialIcons.vue';
