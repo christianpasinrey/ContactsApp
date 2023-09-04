@@ -64,26 +64,26 @@
     <div class="flex flex-col overflow-y-auto px-12">
         <div class="flex w-full mt-24 mb-2">
             <div class="flex flex-col w-10/12">
-                <label for="keywords">Qué noticia buscas?</label>
+                <label for="keywords" class="dark:text-gray-100">Qué noticia buscas?</label>
                 <input
-                    type="text"
+                    type="search"
                     v-model="mediaStack.keywords"
-                    class="w-full border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-l-lg text-sm focus:outline-none"
+                    class="w-full border-t-0 border-l-0 border-r-0 border-b border-b-gray-400 bg-transparent h-10 px-3 text-sm focus:ring-0 dark:focus:border-b-slate-500"
                     @keyup.enter.prevent="mediaStack.fetchNews"
                     >
             </div>
             <button @click.prevent="mediaStack.fetchNews"
-                class="w-fit h-10 py-1 px-2 mt-6 bg-sky-500 hover:bg-sky-600 hover:scale-105 rounded-r-md text-gray-50 font-bold">
+                class="w-fit h-10 px-2 mt-6 ring-1 ring-cyan-900 dark:ring-slate-300 hover:text-gray-50 dark:hover:text-gray-50 text-gray-800 hover:bg-blue-600 hover:scale-105 rounded-md dark:bg-slate-500 mx-2 dark:hover:bg-slate-600 dark:text-gray-50 font-bold">
                 Buscar
             </button>
         </div>
         <div class="flex w-full my-2 gap-3">
             <div class="flex flex-col">
-                <label for="categories">Categorías</label>
+                <label for="categories" class="dark:text-gray-100">Categorías</label>
                 <input type="text" id="categories"
                 @keyup.space.prevent="addTag('categories')"
                 v-model="categoriesString"
-                class="w-full border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none">
+                class="w-full  border-t-0 border-l-0 border-r-0 border-b border-b-gray-400 bg-transparent h-10 px-5 pr-16 text-sm focus:ring-0 dark:focus:border-b-slate-500">
                 <div class="tags-container">
                     <span
                         v-for="(tag, index) in mediaStack.categories"
@@ -98,11 +98,11 @@
                 </div>
             </div>
             <div class="flex flex-col">
-                <label for="sources">Fuentes</label>
+                <label for="sources" class="dark:text-gray-100">Fuentes</label>
                 <input type="text" id="sources"
                 @keyup.space.prevent="addTag('sources')"
                 v-model="sourcesString"
-                class="w-full border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none">
+                class="w-full  border-t-0 border-l-0 border-r-0 border-b border-b-gray-400 bg-transparent h-10 px-5 pr-16 text-sm focus:ring-0 dark:focus:border-b-slate-500">
                 <div class="tags-container">
                     <span
                         v-for="(tag, index) in mediaStack.sources"

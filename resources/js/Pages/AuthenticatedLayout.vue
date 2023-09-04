@@ -77,7 +77,7 @@ onBeforeMount(() => {
 <template>
     <div>
         <div class="min-h-screen relative flex">
-            <nav class="font-robotoBlack hidden md:flex flex-col z-[999] md:w-3/12 h-screen shadow-md bg-gradient-to-r from-slate-400 via-gray-300 to-slate-300 dark:from-slate-600 dark:via-gray-500 dark:to-slate-500 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+            <nav class="font-robotoBlack hidden md:flex flex-col z-[999] md:w-3/12 h-screen shadow-md bg-slate-200 dark:bg-slate-700 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex flex-col text-center items-center content-center">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center dark:text-gray-50 font-bold my-6">
@@ -158,7 +158,6 @@ onBeforeMount(() => {
                         <RouterLink to="/advanced-search" id="advanced-search-page-button" class="hidden">
                         </RouterLink>
                     </div>
-
                 </div>
                 <!-- Responsive Navigation Menu -->
                 <div
@@ -190,12 +189,11 @@ onBeforeMount(() => {
             </nav>
 
             <!-- Page Content -->
-            <main class="flex flex-col h-screen z-10 relative w-full font-robotoLight">
-
+            <main class="flex flex-col h-screen z-10 relative w-full bg-slate-100 dark:bg-slate-600 font-robotoLight">
                 <RouterView :key="$route.fullPath" />
                 <slot />
             </main>
-            <aside class="hidden md:flex md:flex-col md:w-5/12 relative">
+            <aside class="hidden md:flex md:flex-col md:w-5/12 relative bg-slate-200 dark:bg-slate-700">
                 <div class="shrink-0 flex items-center px-0 dark:text-gray-50 font-bold absolute top-6 left-0 w-full lg:w-8/12">
                     <div class="relative flex w-full">
                         <input type="search"
